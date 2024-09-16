@@ -109,6 +109,25 @@ func (pq *PhysicalQuantityRepository) UpdateLast(physicalQuantity domain.Physica
 		}).Error
 }
 
+func (pq *PhysicalQuantityRepository) UpdateStatus(physicalQuantity domain.PhysicalQuantity, statusCode string) error {
+	physicalQuantityPO := model.PhysicalQuantity{
+		UUID:       physicalQuantity.UUID,
+		StatusCode: statusCode,
+	}
+
+	update := pq.gorm.Model(&physicalQuantityPO).
+		Where("uuid = ?", physicalQuantityPO.UUID).
+		Update("status_code", physicalQuantityPO.StatusCode)
+	if update.Error != nil {
+		return update.Error
+	}
+	if update.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
+}
+
 type PhysicalQuantityCatchDetailRepository struct {
 	gorm *gorm.DB
 }
@@ -137,21 +156,30 @@ func (pqcd *PhysicalQuantityCatchDetailRepository) List(physicalQuantity domain.
 	return physicalQuantityCatchDetailsDomain, err
 }
 
-func (pq *PhysicalQuantityRepository) UpdateStatus(physicalQuantity domain.PhysicalQuantity, statusCode string) error {
-	physicalQuantityPO := model.PhysicalQuantity{
-		UUID:       physicalQuantity.UUID,
-		StatusCode: statusCode,
+type PhysicalQuantityWithEvaluateRepository struct {
+	gorm *gorm.DB
+}
+
+func NewPhysicalQuantityWithEvaluateRepository(gorm *gorm.DB) irepository.IPhysicalQuantityWithEvaluateRepository {
+	return &PhysicalQuantityWithEvaluateRepository{gorm: gorm}
+}
+
+func (pqwe *PhysicalQuantityWithEvaluateRepository) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityWithEvaluate, error) {
+	physicalQuantityWherePO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
+
+	var physicalQuantityWithEvaluates []model.PhysicalQuantityWithEvaluate
+	err := pqwe.gorm.Preload(clause.Associations).
+		Where(physicalQuantityWherePO).
+		Order("priority").
+		Find(&physicalQuantityWithEvaluates).Error
+	if err != nil {
+		return nil, err
 	}
 
-	update := pq.gorm.Model(&physicalQuantityPO).
-		Where("uuid = ?", physicalQuantityPO.UUID).
-		Update("status_code", physicalQuantityPO.StatusCode)
-	if update.Error != nil {
-		return update.Error
-	}
-	if update.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
+	var physicalQuantityWithEvaluatesDomain []domain.PhysicalQuantityWithEvaluate
+	for _, physicalQuantityWithEvaluate := range physicalQuantityWithEvaluates {
+		physicalQuantityWithEvaluatesDomain = append(physicalQuantityWithEvaluatesDomain, physicalQuantityWithEvaluate.ToDomain())
 	}
 
-	return nil
+	return physicalQuantityWithEvaluatesDomain, err
 }

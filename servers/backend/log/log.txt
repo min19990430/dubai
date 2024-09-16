@@ -1,0 +1,12 @@
+{"level":"info","time":"2024-09-16T13:59:50.951+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-16T14:10:13.652+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-16T15:51:05.361+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-16T15:51:18.717+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
+{"level":"info","time":"2024-09-16T15:55:18.851+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-16T15:55:23.115+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
+{"level":"info","time":"2024-09-16T15:55:50.995+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-16T15:56:00.250+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
+{"level":"info","time":"2024-09-16T15:56:45.984+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-16T15:56:50.179+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
+{"level":"info","time":"2024-09-16T15:57:13.106+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-16T16:45:16.621+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}

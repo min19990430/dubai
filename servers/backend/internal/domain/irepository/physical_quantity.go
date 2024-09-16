@@ -6,6 +6,10 @@ type IPhysicalQuantityCatchDetailRepository interface {
 	List(domain.PhysicalQuantity) ([]domain.PhysicalQuantityCatchDetail, error)
 }
 
+type IPhysicalQuantityWithEvaluateRepository interface {
+	List(domain.PhysicalQuantity) ([]domain.PhysicalQuantityWithEvaluate, error)
+}
+
 type IPhysicalQuantityRepository interface {
 	FindByUUID(string) (domain.PhysicalQuantity, error)
 	List(domain.PhysicalQuantity) ([]domain.PhysicalQuantity, error)

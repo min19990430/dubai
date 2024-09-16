@@ -1,0 +1,40 @@
+app:
+  run_mode: "debug"
+  cancel_timeout: "5s"
+
+server:
+  http_port: 18020
+  read_header_timeout: "5s"
+
+mysql:
+  user: "root"
+  password: "@Fenri16485970"
+  #127.0.0.1:3306
+  host: "127.0.0.1"
+  name: "international_iot_platform"
+  debug: true
+
+redis:
+  user: ""
+  password: "@Fenri16485970"
+  #127.0.0.1:3306
+  host: "127.0.0.1:6379"
+  database: 0
+  idleTimeout: "200s"
+
+bigcache:
+  life_window: "600s"
+
+log:
+  log_path: "C:\\Users\\user\\Documents\\AzureDevOps\\Dubai\\servers\\backend\\log\\log.txt"
+  application_name: "杜拜"
+  debug: true
+
+linenotify:
+  token: "3GYFrCvlvUxICp0u45uLXRweXMseSMPjlSleq79DSos"
+
+ratelimit:
+  limit_per_minute: 600
+
+jwt:
+  expiration: "1d" #1 day

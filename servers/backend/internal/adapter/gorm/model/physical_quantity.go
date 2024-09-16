@@ -102,8 +102,44 @@ func (p PhysicalQuantity) ToCalibrationDomain() domain.Calibration {
 	}
 }
 
+type PhysicalQuantityWithEvaluate struct {
+	PhysicalQuantity
+
+	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `gorm:"references:UUID;foreignKey:PhysicalQuantityUUID"`
+}
+
+func (PhysicalQuantityWithEvaluate) TableName() string {
+	return "physical_quantity"
+}
+
+func (p PhysicalQuantityWithEvaluate) ToDomain() domain.PhysicalQuantityWithEvaluate {
+	tempPhysicalQuantityEvaluates := []domain.PhysicalQuantityEvaluate{}
+	for _, physicalQuantityEvaluate := range p.PhysicalQuantityEvaluates {
+		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, physicalQuantityEvaluate.ToDomain())
+	}
+
+	return domain.PhysicalQuantityWithEvaluate{
+		PhysicalQuantity:          p.PhysicalQuantity.ToDomain(),
+		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
+	}
+}
+
+func (p PhysicalQuantityWithEvaluate) FromDomain(domain domain.PhysicalQuantityWithEvaluate) PhysicalQuantityWithEvaluate {
+	tempPhysicalQuantityEvaluates := []PhysicalQuantityEvaluate{}
+	for _, physicalQuantityEvaluate := range domain.PhysicalQuantityEvaluates {
+		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, PhysicalQuantityEvaluate{}.FromDomain(physicalQuantityEvaluate))
+	}
+
+	return PhysicalQuantityWithEvaluate{
+		PhysicalQuantity:          PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
+		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
+	}
+}
+
 type PhysicalQuantityCatchDetail struct {
 	PhysicalQuantity
+
+	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `gorm:"references:UUID;foreignKey:PhysicalQuantityUUID"`
 
 	Device Device `gorm:"references:DeviceUUID;foreignKey:UUID"`
 
@@ -120,10 +156,16 @@ func (p PhysicalQuantityCatchDetail) ToDomain() domain.PhysicalQuantityCatchDeta
 		tempAlarmSettings = append(tempAlarmSettings, alarmSetting.ToDomain())
 	}
 
+	tempPhysicalQuantityEvaluates := []domain.PhysicalQuantityEvaluate{}
+	for _, physicalQuantityEvaluate := range p.PhysicalQuantityEvaluates {
+		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, physicalQuantityEvaluate.ToDomain())
+	}
+
 	return domain.PhysicalQuantityCatchDetail{
-		PhysicalQuantity: p.PhysicalQuantity.ToDomain(),
-		Device:           p.Device.ToDomain(),
-		AlarmSettings:    tempAlarmSettings,
+		PhysicalQuantity:          p.PhysicalQuantity.ToDomain(),
+		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
+		Device:                    p.Device.ToDomain(),
+		AlarmSettings:             tempAlarmSettings,
 	}
 }
 
@@ -133,9 +175,15 @@ func (p PhysicalQuantityCatchDetail) FromDomain(domain domain.PhysicalQuantityCa
 		tempAlarmSettings = append(tempAlarmSettings, AlarmSetting{}.FromDomain(alarmSetting))
 	}
 
+	tempPhysicalQuantityEvaluates := []PhysicalQuantityEvaluate{}
+	for _, physicalQuantityEvaluate := range domain.PhysicalQuantityEvaluates {
+		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, PhysicalQuantityEvaluate{}.FromDomain(physicalQuantityEvaluate))
+	}
+
 	return PhysicalQuantityCatchDetail{
-		PhysicalQuantity: PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
-		Device:           Device{}.FromDomain(domain.Device),
-		AlarmSettings:    tempAlarmSettings,
+		PhysicalQuantity:          PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
+		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
+		Device:                    Device{}.FromDomain(domain.Device),
+		AlarmSettings:             tempAlarmSettings,
 	}
 }

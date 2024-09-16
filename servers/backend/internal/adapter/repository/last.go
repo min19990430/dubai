@@ -20,10 +20,13 @@ func NewLastRepository(gorm *gorm.DB) irepository.ILastRepository {
 
 func (l *LastRepository) GetLast() ([]domain.Last, error) {
 	var lastPO []model.Last
-	err := l.gorm.Table("last").Table("device").
+	err := l.gorm.Table("device").
 		Preload("Station").
-		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
+		Preload("PhysicalQuantitiesWithEvaluate", func(db *gorm.DB) *gorm.DB {
 			return db.Where("is_enable = true").Order("physical_quantity.priority")
+		}).
+		Preload("PhysicalQuantitiesWithEvaluate.PhysicalQuantityEvaluates", func(db *gorm.DB) *gorm.DB {
+			return db.Where("is_enable = true").Order("physical_quantity_evaluate.priority")
 		}).
 		Where("is_enable = true").
 		Order("priority").
@@ -39,8 +42,8 @@ func (l *LastRepository) GetLast() ([]domain.Last, error) {
 
 		tempLast.Device = v.Device.ToDomain()
 
-		for _, pq := range v.PhysicalQuantities {
-			tempLast.PhysicalQuantities = append(tempLast.PhysicalQuantities, pq.ToDomain())
+		for _, pq := range v.PhysicalQuantitiesWithEvaluate {
+			tempLast.PhysicalQuantitiesWithEvaluate = append(tempLast.PhysicalQuantitiesWithEvaluate, pq.ToDomain())
 		}
 
 		last = append(last, tempLast)

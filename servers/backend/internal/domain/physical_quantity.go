@@ -28,8 +28,16 @@ type PhysicalQuantity struct {
 	Data       float64    `json:"data"`
 }
 
+type PhysicalQuantityWithEvaluate struct {
+	PhysicalQuantity
+
+	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `json:"physical_quantity_evaluates"`
+}
+
 type PhysicalQuantityCatchDetail struct {
 	PhysicalQuantity `json:"physical_quantity"`
+
+	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `json:"physical_quantity_evaluates"`
 
 	Device Device `gorm:"references:DeviceUUID;foreignKey:UUID" json:"device"`
 
