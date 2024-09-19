@@ -21,7 +21,7 @@ type User struct {
 
 	CreatedAt time.Time      `gorm:"autoCreateTime;column:created_at;not null;type:datetime" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"autoUpdateTime;column:updated_at;type:datetime" json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime" json:"deleted_at" `
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime" json:"deleted_at"`
 }
 
 func (User) TableName() string {

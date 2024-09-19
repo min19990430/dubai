@@ -30,3 +30,26 @@ func (sim SignalInputMapping) FromDomain(signalInputMapping domain.SignalInputMa
 		TargetPhysicalQuantityUUID: signalInputMapping.TargetPhysicalQuantityUUID,
 	}
 }
+
+type SignalInputMappingDetail struct {
+	SignalInputMapping
+	PhysicalQuantity PhysicalQuantity `gorm:"references:TargetPhysicalQuantityUUID;foreignKey:UUID"`
+}
+
+func (SignalInputMappingDetail) TableName() string {
+	return "signal_input_mapping"
+}
+
+func (simd SignalInputMappingDetail) ToDomain() domain.SignalInputMappingDetail {
+	return domain.SignalInputMappingDetail{
+		SignalInputMapping: simd.SignalInputMapping.ToDomain(),
+		PhysicalQuantity:   simd.PhysicalQuantity.ToDomain(),
+	}
+}
+
+func (simd SignalInputMappingDetail) FromDomain(signalInputMappingDetail domain.SignalInputMappingDetail) SignalInputMappingDetail {
+	return SignalInputMappingDetail{
+		SignalInputMapping: SignalInputMapping{}.FromDomain(signalInputMappingDetail.SignalInputMapping),
+		PhysicalQuantity:   PhysicalQuantity{}.FromDomain(signalInputMappingDetail.PhysicalQuantity),
+	}
+}

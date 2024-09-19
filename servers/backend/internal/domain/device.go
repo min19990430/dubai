@@ -16,11 +16,4 @@ type Device struct {
 	Lat         float64 `json:"lat"`
 	Lon         float64 `json:"lon"`
 	Description string  `json:"description"`
-
-	StationUUID string `json:"station_uuid"`
-}
-
-type DeviceStation struct {
-	Device
-	Station Station `json:"station"`
 }

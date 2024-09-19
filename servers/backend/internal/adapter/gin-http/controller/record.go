@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,13 +13,13 @@ import (
 type RecordController struct {
 	response response.IResponse
 
-	record usecase.RecordUsecase
+	recordUsecase usecase.RecordUsecase
 }
 
-func NewRecordController(response response.IResponse, record *usecase.RecordUsecase) *RecordController {
+func NewRecordController(response response.IResponse, usecase *usecase.RecordUsecase) *RecordController {
 	return &RecordController{
-		response: response,
-		record:   *record,
+		response:      response,
+		recordUsecase: *usecase,
 	}
 }
 
@@ -34,7 +35,7 @@ func (rc *RecordController) LastRecord(c *gin.Context) {
 		return
 	}
 
-	record, err := rc.record.Last(request.PhysicalQuantityUUID, request.TimeZone)
+	record, err := rc.recordUsecase.Last(request.PhysicalQuantityUUID, request.TimeZone)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return
@@ -67,7 +68,7 @@ func (rc *RecordController) PostList(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.record.List(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
+	records, err := rc.recordUsecase.List(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return
@@ -100,8 +101,9 @@ func (rc *RecordController) PostListDeviceJSON(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.record.ListMapByDevice(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
+	records, err := rc.recordUsecase.ListMapByDevice(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
 	if err != nil {
+		log.Println(err)
 		rc.response.FailWithError(c, queryFail, err)
 		return
 	}
@@ -133,7 +135,7 @@ func (rc *RecordController) PostListStationJSON(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.record.ListMapByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone)
+	records, err := rc.recordUsecase.ListMapByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return

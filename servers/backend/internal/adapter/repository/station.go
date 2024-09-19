@@ -28,10 +28,10 @@ func (s *StationRepository) FindByUUID(uuid string) (domain.Station, error) {
 }
 
 func (s *StationRepository) List(station domain.Station) ([]domain.Station, error) {
-	var stationWherePO = model.Station{}.FromDomain(station)
+	stationWherePO := model.Station{}.FromDomain(station)
 	var stationPOs []model.Station
 
-	err := s.gorm.Where(stationWherePO).Find(&stationPOs).Error
+	err := s.gorm.Where(stationWherePO).Order("priority").Find(&stationPOs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -61,4 +61,32 @@ func (s *StationRepository) ListIn(station domain.Station, uuids []string) ([]do
 		stations = append(stations, stationPO.ToDomain())
 	}
 	return stations, nil
+}
+
+func (s *StationRepository) Create(station domain.Station) error {
+	stationPO := model.Station{}.FromDomain(station)
+	return s.gorm.Create(&stationPO).Error
+}
+
+func (s *StationRepository) Update(station domain.Station) error {
+	stationPO := model.Station{}.FromDomain(station)
+	return s.gorm.Model(&stationPO).
+		Where("uuid = ?", station.UUID).
+		Updates(
+			map[string]interface{}{
+				"id":          stationPO.ID,
+				"name":        stationPO.Name,
+				"uuid":        stationPO.UUID,
+				"priority":    stationPO.Priority,
+				"address":     stationPO.Address,
+				"is_enable":   stationPO.IsEnable,
+				"lat":         stationPO.Lat,
+				"lon":         stationPO.Lon,
+				"description": stationPO.Description,
+			}).Error
+}
+
+func (s *StationRepository) Delete(station domain.Station) error {
+	stationPO := model.Station{}.FromDomain(station)
+	return s.gorm.Where("uuid = ?", station.UUID).Delete(&stationPO).Error
 }

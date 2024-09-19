@@ -23,16 +23,14 @@ func (du *DeviceUsecase) List(device domain.Device) ([]domain.Device, error) {
 	return du.device.List(device)
 }
 
-type DeviceStationUsecase struct {
-	deviceStation irepository.IDeviceStationRepository
+func (du *DeviceUsecase) Create(device domain.Device) error {
+	return du.device.Create(device)
 }
 
-func NewDeviceStationUsecase(deviceStation irepository.IDeviceStationRepository) *DeviceStationUsecase {
-	return &DeviceStationUsecase{
-		deviceStation: deviceStation,
-	}
+func (du *DeviceUsecase) Update(device domain.Device) error {
+	return du.device.Update(device)
 }
 
-func (dsu *DeviceStationUsecase) List(deviceStation domain.DeviceStation) ([]domain.DeviceStation, error) {
-	return dsu.deviceStation.List(deviceStation)
+func (du *DeviceUsecase) Delete(key string) error {
+	return du.device.Delete(domain.Device{UUID: key})
 }

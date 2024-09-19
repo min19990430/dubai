@@ -18,13 +18,13 @@ func NewPhysicalQuantityRepository(gorm *gorm.DB) irepository.IPhysicalQuantityR
 }
 
 func (pq *PhysicalQuantityRepository) FindByUUID(uuid string) (domain.PhysicalQuantity, error) {
-	var physicalQuantity model.PhysicalQuantity
-	err := pq.gorm.Where("uuid = ?", uuid).First(&physicalQuantity).Error
+	var physicalQuantityPO model.PhysicalQuantity
+	err := pq.gorm.Where("uuid = ?", uuid).First(&physicalQuantityPO).Error
 	if err != nil {
 		return domain.PhysicalQuantity{}, err
 	}
 
-	return physicalQuantity.ToDomain(), nil
+	return physicalQuantityPO.ToDomain(), nil
 }
 
 func (pq *PhysicalQuantityRepository) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantity, error) {
@@ -109,23 +109,38 @@ func (pq *PhysicalQuantityRepository) UpdateLast(physicalQuantity domain.Physica
 		}).Error
 }
 
-func (pq *PhysicalQuantityRepository) UpdateStatus(physicalQuantity domain.PhysicalQuantity, statusCode string) error {
-	physicalQuantityPO := model.PhysicalQuantity{
-		UUID:       physicalQuantity.UUID,
-		StatusCode: statusCode,
-	}
+func (pq *PhysicalQuantityRepository) Create(physicalQuantity domain.PhysicalQuantity) error {
+	physicalQuantityPO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
 
-	update := pq.gorm.Model(&physicalQuantityPO).
+	return pq.gorm.Create(&physicalQuantityPO).Error
+}
+
+func (pq *PhysicalQuantityRepository) Update(physicalQuantity domain.PhysicalQuantity) error {
+	physicalQuantityPO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
+
+	return pq.gorm.Model(&physicalQuantityPO).
 		Where("uuid = ?", physicalQuantityPO.UUID).
-		Update("status_code", physicalQuantityPO.StatusCode)
-	if update.Error != nil {
-		return update.Error
-	}
-	if update.RowsAffected == 0 {
-		return gorm.ErrRecordNotFound
-	}
+		Updates(map[string]interface{}{
+			"name":                         physicalQuantityPO.Name,
+			"full_name":                    physicalQuantityPO.FullName,
+			"si_unit":                      physicalQuantityPO.SiUnit,
+			"device_uuid":                  physicalQuantityPO.DeviceUUID,
+			"station_uuid":                 physicalQuantityPO.StationUUID,
+			"status_code":                  physicalQuantityPO.StatusCode,
+			"priority":                     physicalQuantityPO.Priority,
+			"physical_quantity_data_type":  physicalQuantityPO.PhysicalQuantityDataType,
+			"aggregate_calculation_method": physicalQuantityPO.AggregateCalculationMethod,
+			"calibration_enable":           physicalQuantityPO.CalibrationEnable,
+			"calibration_value":            physicalQuantityPO.CalibrationValue,
+			"calibration_parameter":        physicalQuantityPO.CalibrationParameter,
+			"description":                  physicalQuantityPO.Description,
+		}).Error
+}
 
-	return nil
+func (pq *PhysicalQuantityRepository) Delete(physicalQuantity domain.PhysicalQuantity) error {
+	physicalQuantityPO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
+
+	return pq.gorm.Delete(&physicalQuantityPO).Error
 }
 
 type PhysicalQuantityCatchDetailRepository struct {
@@ -156,30 +171,21 @@ func (pqcd *PhysicalQuantityCatchDetailRepository) List(physicalQuantity domain.
 	return physicalQuantityCatchDetailsDomain, err
 }
 
-type PhysicalQuantityWithEvaluateRepository struct {
-	gorm *gorm.DB
-}
-
-func NewPhysicalQuantityWithEvaluateRepository(gorm *gorm.DB) irepository.IPhysicalQuantityWithEvaluateRepository {
-	return &PhysicalQuantityWithEvaluateRepository{gorm: gorm}
-}
-
-func (pqwe *PhysicalQuantityWithEvaluateRepository) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityWithEvaluate, error) {
-	physicalQuantityWherePO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
-
-	var physicalQuantityWithEvaluates []model.PhysicalQuantityWithEvaluate
-	err := pqwe.gorm.Preload(clause.Associations).
-		Where(physicalQuantityWherePO).
-		Order("priority").
-		Find(&physicalQuantityWithEvaluates).Error
-	if err != nil {
-		return nil, err
+func (pq *PhysicalQuantityRepository) UpdateStatus(physicalQuantity domain.PhysicalQuantity, statusCode string) error {
+	physicalQuantityPO := model.PhysicalQuantity{
+		UUID:       physicalQuantity.UUID,
+		StatusCode: statusCode,
 	}
 
-	var physicalQuantityWithEvaluatesDomain []domain.PhysicalQuantityWithEvaluate
-	for _, physicalQuantityWithEvaluate := range physicalQuantityWithEvaluates {
-		physicalQuantityWithEvaluatesDomain = append(physicalQuantityWithEvaluatesDomain, physicalQuantityWithEvaluate.ToDomain())
+	update := pq.gorm.Model(&physicalQuantityPO).
+		Where("uuid = ?", physicalQuantityPO.UUID).
+		Update("status_code", physicalQuantityPO.StatusCode)
+	if update.Error != nil {
+		return update.Error
+	}
+	if update.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
 	}
 
-	return physicalQuantityWithEvaluatesDomain, err
+	return nil
 }

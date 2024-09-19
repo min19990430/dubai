@@ -48,17 +48,18 @@ func main() {
 	alarmSetting := repository.NewAlarmSettingRepository(mysql, linenotify)
 	calibration := repository.NewCalibrationRepository(mysql)
 	captcha := repository.NewCaptchaRepository()
+	controlSignal := repository.NewControlSignalRepository(mysql)
 	deviceAlarmRecord := repository.NewDeviceAlarmRecordRepository(mysql)
 	deviceAlarmSetting := repository.NewDeviceAlarmSettingRepository(mysql, linenotify)
 	device := repository.NewDeviceRepository(mysql)
-	deviceStation := repository.NewDeviceStationRepository(mysql)
 	last := repository.NewLastRepository(mysql)
 	login := repository.NewLoginRepository(mysql)
 	physicalQuantity := repository.NewPhysicalQuantityRepository(mysql)
-	physicalQuantityEvaluate := repository.NewPhysicalQuantityEvaluateRepository(mysql)
+	physicalQuantityPreset := repository.NewPhysicalQuantityPresetRepository(mysql)
 	physicalQuantityCatchDetail := repository.NewPhysicalQuantityCatchDetailRepository(mysql)
 	record := repository.NewRecordRepository(mysql)
 	signalInputMapping := repository.NewSignalInputMappingRepository(mysql, bigcache)
+	signalInputMappingDetail := repository.NewSignalInputMappingDetailRepository(mysql)
 	station := repository.NewStationRepository(mysql)
 	timeSeries := repository.NewTimeSeriesRepository(mysql)
 	token := repository.NewTokenRepository(redispool, conf.GetDuration("jwt.expiration"))
@@ -70,21 +71,24 @@ func main() {
 	userUsecase := usecase.NewUserUsecase(user)
 	userAuthUsecase := usecase.NewUserAuthUsecase(userAuth)
 	tokenUsecase := usecase.NewTokenUsecase(token, *userAuthUsecase)
-	physicalQuantityEvaluateUsecase := usecase.NewPhysicalQuantityEvaluateUsecase(physicalQuantityEvaluate)
 
 	alarmRecordUsecase := usecase.NewAlarmRecordUsecase(alarmRecord, alarmSetting, physicalQuantity, device, station)
-	alarmSettingUsecase := usecase.NewAlarmSettingUsecase(alarmSetting, device)
+	alarmSettingUsecase := usecase.NewAlarmSettingUsecase(alarmSetting, physicalQuantity)
+	alarmRecordCollectionUsecase := usecase.NewAlarmRecordCollectionUsecase(alarmRecord, deviceAlarmRecord, deviceAlarmSetting, physicalQuantity, alarmSetting)
 	alarmUsecase := usecase.NewAlarmUsecase(alarmSetting, alarmRecord)
 	calibrationUsecase := usecase.NewCalibrationUsecase(calibration)
 	captchaUsecase := usecase.NewCaptchaUsecase(captcha)
-	catchInputUsecase := usecase.NewCatchInputUsecase(physicalQuantity, physicalQuantityEvaluate, physicalQuantityCatchDetail, device, station, record, *alarmUsecase, *physicalQuantityEvaluateUsecase)
+	catchInputUsecase := usecase.NewCatchInputUsecase(physicalQuantity, physicalQuantityCatchDetail, device, station, record, *alarmUsecase)
+	controlSignalUsecase := usecase.NewControlSignalUsecase(controlSignal)
 	deviceAlarmSettingUsecase := usecase.NewDeviceAlarmSettingUsecase(deviceAlarmSetting, deviceAlarmRecord, device)
 	deviceUsecase := usecase.NewDeviceUsecase(device)
-	deviceStationUsecase := usecase.NewDeviceStationUsecase(deviceStation)
 	lastUsecase := usecase.NewLastUsecase(last)
 	loginUsecase := usecase.NewLoginUsecase(login, *tokenUsecase)
 	physicalQuantityUsecase := usecase.NewPhysicalQuantityUsecase(physicalQuantity)
+	physicalQuantityPresetUsecase := usecase.NewPhysicalQuantityPresetUsecase(physicalQuantityPreset)
 	recordUsecase := usecase.NewRecordUsecase(record, device, station, physicalQuantity)
+	signalInputMappingUsecase := usecase.NewSignalInputMappingUsecase(signalInputMapping)
+	signalInputMappingDetailUsecase := usecase.NewSignalInputMappingDetailUsecase(signalInputMappingDetail)
 	stationUsecase := usecase.NewStationUsecase(station)
 	timeSeriesUsecase := usecase.NewTimeSeriesUsecase(physicalQuantity, device, timeSeries)
 
@@ -99,17 +103,22 @@ func main() {
 
 	jsonResponse := jsonresponse.NewJSONResponse(zapLogger)
 
+	accountController := controller.NewAccountController(jsonResponse)
 	alarmRecordController := controller.NewAlarmRecordController(jsonResponse, alarmRecordUsecase)
+	alarmRecordCollectionController := controller.NewAlarmRecordCollectionController(jsonResponse, alarmRecordCollectionUsecase)
 	alarmSettingController := controller.NewAlarmSettingController(jsonResponse, alarmSettingUsecase)
 	calibrationController := controller.NewCalibrationController(jsonResponse, calibrationUsecase, stationUsecase, deviceUsecase)
 	captchaController := controller.NewCaptchaController(jsonResponse, captchaUsecase)
 	catchInputController := controller.NewCatchInputController(jsonResponse, catchInputUsecase, signalInputToInput)
+	controlSignalController := controller.NewControlSignalController(jsonResponse, controlSignalUsecase)
 	deviceController := controller.NewDeviceController(jsonResponse, deviceUsecase)
-	deviceStationController := controller.NewDeviceStationController(jsonResponse, deviceStationUsecase)
 	lastController := controller.NewLastController(jsonResponse, lastUsecase, alarmRecordUsecase)
 	loginController := controller.NewLoginController(jsonResponse, loginUsecase)
 	physicalQuantityController := controller.NewPhysicalQuantityController(jsonResponse, physicalQuantityUsecase)
+	physicalQuantityPresetController := controller.NewPhysicalQuantityPresetController(jsonResponse, physicalQuantityPresetUsecase)
 	recordController := controller.NewRecordController(jsonResponse, recordUsecase)
+	signalInputMappingController := controller.NewSignalInputMappingController(jsonResponse, signalInputMappingUsecase)
+	signalInputMappingDetailController := controller.NewSignalInputMappingDetailController(jsonResponse, signalInputMappingDetailUsecase)
 	stationController := controller.NewStationController(jsonResponse, stationUsecase)
 	timeSeriesController := controller.NewTimeSeriesController(jsonResponse, timeSeriesUsecase)
 	userController := controller.NewUserController(jsonResponse, userUsecase, loginUsecase)
@@ -123,34 +132,44 @@ func main() {
 	jwtMid := jwt.NewJWT(jsonResponse, tokenUsecase)
 	loggerMid := loggerMid.NewLogger(zapLogger)
 
+	accountRouter := router.NewAccountRouter(accountController, jwtMid)
 	alarmRecordRouter := router.NewAlarmRecordRouter(alarmRecordController)
+	alarmRecordCollectionRouter := router.NewAlarmRecordCollectionRouter(alarmRecordCollectionController)
 	alarmSettingRouter := router.NewAlarmSettingRouter(alarmSettingController)
 	calibrationRouter := router.NewCalibrationRouter(calibrationController)
 	captchaRouter := router.NewCaptchaRouter(captchaController)
 	catchInputRouter := router.NewCatchInputRouter(catchInputController)
-	deviceRouter := router.NewDeviceRouter(deviceController)
-	deviceStationRouter := router.NewDeviceStationRouter(deviceStationController)
+	controlSignalRouter := router.NewControlSignalRouter(controlSignalController)
+	deviceRouter := router.NewDeviceRouter(deviceController, jwtMid)
 	lastRouter := router.NewLastRouter(lastController)
 	loginRouter := router.NewLoginRouter(loginController, captchaMid, jwtMid)
-	physicalQuantityRouter := router.NewPhysicalQuantityRouter(physicalQuantityController)
+	physicalQuantityRouter := router.NewPhysicalQuantityRouter(physicalQuantityController, jwtMid)
+	physicalQuantityPresetRouter := router.NewPhysicalQuantityPresetRouter(physicalQuantityPresetController, jwtMid)
 	recordRouter := router.NewRecordRouter(recordController, loggerMid)
-	stationRouter := router.NewStationRouter(stationController)
+	signalInputMappingRouter := router.NewSignalInputMappingRouter(signalInputMappingController, jwtMid)
+	signalInputMappingDetailRouter := router.NewSignalInputMappingDetailRouter(signalInputMappingDetailController, jwtMid)
+	stationRouter := router.NewStationRouter(stationController, jwtMid)
 	timeSeriesRouter := router.NewTimeSeriesRouter(timeSeriesController)
 	userRouter := router.NewUserRouter(userController, jwtMid, casbinMid)
 
 	app := ginhttp.NewApp(
 		[]router.IRoute{
+			accountRouter,
 			alarmRecordRouter,
+			alarmRecordCollectionRouter,
 			alarmSettingRouter,
 			calibrationRouter,
 			captchaRouter,
 			catchInputRouter,
+			controlSignalRouter,
 			deviceRouter,
-			deviceStationRouter,
 			lastRouter,
 			loginRouter,
 			physicalQuantityRouter,
+			physicalQuantityPresetRouter,
 			recordRouter,
+			signalInputMappingRouter,
+			signalInputMappingDetailRouter,
 			stationRouter,
 			timeSeriesRouter,
 			userRouter,
@@ -162,7 +181,7 @@ func main() {
 		},
 	)
 
-	log.Println(conf.GetString("log.application_name"), "v0.11.0")
+	log.Println(conf.GetString("log.application_name"), "v0.8.0")
 
 	ginhttp.Run(app, ginhttp.NewOption(conf))
 }

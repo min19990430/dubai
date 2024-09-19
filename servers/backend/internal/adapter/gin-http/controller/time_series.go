@@ -38,11 +38,11 @@ func (tsc *TimeSeriesController) PostListByStation(c *gin.Context) {
 
 	aggregateData, err := tsc.timeSeries.AggregateDataByStation(request.StartTime, request.EndTime, request.StationUUID, request.Interval, request.Reverse)
 	if err != nil {
-		tsc.response.FailWithError(c, "fail to get time series", err)
+		tsc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
-	tsc.response.SuccessWithData(c, "success", aggregateData)
+	tsc.response.SuccessWithData(c, querySuccess, aggregateData)
 }
 
 func (tsc *TimeSeriesController) PostListJSONByStation(c *gin.Context) {
@@ -54,9 +54,9 @@ func (tsc *TimeSeriesController) PostListJSONByStation(c *gin.Context) {
 
 	aggregateData, err := tsc.timeSeries.AggregateMapDataByStation(request.StartTime, request.EndTime, request.StationUUID, request.Interval)
 	if err != nil {
-		tsc.response.FailWithError(c, "fail to get time series", err)
+		tsc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
-	tsc.response.SuccessWithData(c, "success", aggregateData)
+	tsc.response.SuccessWithData(c, querySuccess, aggregateData)
 }

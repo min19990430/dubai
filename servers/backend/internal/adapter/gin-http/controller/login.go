@@ -31,13 +31,13 @@ func (lc *LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	result, err := lc.loginUsecase.Login(request.Username, request.Password)
+	token, err := lc.loginUsecase.Login(request.Username, request.Password)
 	if err != nil {
 		lc.response.FailWithError(c, loginFail, err)
 		return
 	}
 
-	lc.response.SuccessWithData(c, loginSuccess, result)
+	lc.response.SuccessWithData(c, loginSuccess, token)
 }
 
 func (lc *LoginController) Logout(c *gin.Context) {

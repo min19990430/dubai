@@ -23,31 +23,83 @@ func NewDeviceController(response response.IResponse, deviceUsecase *usecase.Dev
 func (dc *DeviceController) GetList(c *gin.Context) {
 	devices, err := dc.device.List(domain.Device{})
 	if err != nil {
-		dc.response.FailWithError(c, "fail to get devices", err)
+		dc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
-	dc.response.SuccessWithData(c, "success", devices)
+	dc.response.SuccessWithData(c, querySuccess, devices)
 }
 
-type DeviceStationController struct {
-	response response.IResponse
-	deviceStation   usecase.DeviceStationUsecase
+type DeviceRequest struct {
+	UUID        string  `json:"uuid" binding:"required,uuid"`
+	ID          string  `json:"id" binding:"required"`
+	Name        string  `json:"name" binding:"required"`
+	IsEnable    bool    `json:"is_enable" `
+	Priority    int     `json:"priority"`
+	Lat         float64 `json:"lat"`
+	Lon         float64 `json:"lon"`
+	Description string  `json:"description"`
 }
 
-func NewDeviceStationController(response response.IResponse, deviceStationUsecase *usecase.DeviceStationUsecase) *DeviceStationController {
-	return &DeviceStationController{
-		response: response,
-		deviceStation: *deviceStationUsecase,
-	}
-}
-
-func (dc *DeviceStationController) GetList(c *gin.Context) {
-	devices, err := dc.deviceStation.List(domain.DeviceStation{})
-	if err != nil {
-		dc.response.FailWithError(c, "fail to get device stations", err)
+func (dc *DeviceController) PostCreate(c *gin.Context) {
+	var req DeviceRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		dc.response.ValidatorFail(c, paramError)
 		return
 	}
 
-	dc.response.SuccessWithData(c, "success", devices)
+	device := domain.Device{
+		UUID:        req.UUID,
+		ID:          req.ID,
+		Name:        req.Name,
+		IsEnable:    req.IsEnable,
+		Priority:    req.Priority,
+		Lat:         req.Lat,
+		Lon:         req.Lon,
+		Description: req.Description,
+	}
+
+	if err := dc.device.Create(device); err != nil {
+		dc.response.FailWithError(c, createFail, err)
+		return
+	}
+
+	dc.response.Success(c, createSuccess)
+}
+
+func (dc *DeviceController) PutUpdate(c *gin.Context) {
+	var req DeviceRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		dc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	device := domain.Device{
+		UUID:        req.UUID,
+		ID:          req.ID,
+		Name:        req.Name,
+		IsEnable:    req.IsEnable,
+		Priority:    req.Priority,
+		Lat:         req.Lat,
+		Lon:         req.Lon,
+		Description: req.Description,
+	}
+
+	if err := dc.device.Update(device); err != nil {
+		dc.response.FailWithError(c, updateFail, err)
+		return
+	}
+
+	dc.response.Success(c, updateSuccess)
+}
+
+func (dc *DeviceController) Delete(c *gin.Context) {
+	uuid := c.Param("uuid")
+
+	if err := dc.device.Delete(uuid); err != nil {
+		dc.response.FailWithError(c, deleteFail, err)
+		return
+	}
+
+	dc.response.Success(c, deleteSuccess)
 }

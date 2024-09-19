@@ -8,14 +8,18 @@ import (
 type AlarmSettingUsecase struct {
 	alarmSetting irepository.IAlarmSettingRepository
 
-	device irepository.IDeviceRepository
+	physicalQuantity irepository.IPhysicalQuantityRepository
 }
 
-func NewAlarmSettingUsecase(alarmSetting irepository.IAlarmSettingRepository, device irepository.IDeviceRepository) *AlarmSettingUsecase {
+func NewAlarmSettingUsecase(alarmSetting irepository.IAlarmSettingRepository, physicalQuantity irepository.IPhysicalQuantityRepository) *AlarmSettingUsecase {
 	return &AlarmSettingUsecase{
-		alarmSetting: alarmSetting,
-		device:       device,
+		alarmSetting:     alarmSetting,
+		physicalQuantity: physicalQuantity,
 	}
+}
+
+func (asu *AlarmSettingUsecase) TestExpression(BooleanExpression string, value float64) (bool, error) {
+	return asu.alarmSetting.ExpressionCheck(domain.AlarmSetting{BooleanExpression: BooleanExpression}, value)
 }
 
 func (asu *AlarmSettingUsecase) UpdateExpression(uuid, expression string) error {
@@ -26,25 +30,36 @@ func (asu *AlarmSettingUsecase) ListByDeviceUUID(uuid string) ([]domain.PQAlarmS
 	return asu.alarmSetting.ListByDeviceUUID(uuid)
 }
 
-func (asu *AlarmSettingUsecase) ListByStationUUID(uuid string) ([]domain.PQAlarmSettings, error) {
-	device, err := asu.device.List(domain.Device{StationUUID: uuid})
+func (asu *AlarmSettingUsecase) ListByStationUUID(stationUUID string) ([]domain.PQAlarmSettings, error) {
+	physicalQuantities, err := asu.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID})
 	if err != nil {
 		return nil, err
 	}
 
-	var deviceUUIDs []string
-	for _, d := range device {
-		deviceUUIDs = append(deviceUUIDs, d.UUID)
-	}
-
 	var pqAlarmSettings []domain.PQAlarmSettings
-	for _, deviceUUID := range deviceUUIDs {
-		pqAlarmSetting, listErr := asu.alarmSetting.ListByDeviceUUID(deviceUUID)
+	for _, physicalQuantity := range physicalQuantities {
+		pqAlarmSetting, listErr := asu.alarmSetting.List(domain.AlarmSetting{PhysicalQuantityUUID: physicalQuantity.UUID})
 		if listErr != nil {
 			return nil, listErr
 		}
-		pqAlarmSettings = append(pqAlarmSettings, pqAlarmSetting...)
+		pqAlarmSettings = append(pqAlarmSettings,
+			domain.PQAlarmSettings{
+				PhysicalQuantity: physicalQuantity,
+				AlarmSettings:    pqAlarmSetting,
+			})
 	}
 
 	return pqAlarmSettings, nil
+}
+
+func (asu *AlarmSettingUsecase) Create(alarmSetting domain.AlarmSetting) error {
+	return asu.alarmSetting.Create(alarmSetting)
+}
+
+func (asu *AlarmSettingUsecase) Update(alarmSetting domain.AlarmSetting) error {
+	return asu.alarmSetting.Update(alarmSetting)
+}
+
+func (asu *AlarmSettingUsecase) Delete(key string) error {
+	return asu.alarmSetting.Delete(domain.AlarmSetting{UUID: key})
 }

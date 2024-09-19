@@ -1,12 +1,36 @@
-{"level":"info","time":"2024-09-16T13:59:50.951+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"info","time":"2024-09-16T14:10:13.652+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"info","time":"2024-09-16T15:51:05.361+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"error","time":"2024-09-16T15:51:18.717+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
-{"level":"info","time":"2024-09-16T15:55:18.851+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"error","time":"2024-09-16T15:55:23.115+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
-{"level":"info","time":"2024-09-16T15:55:50.995+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"error","time":"2024-09-16T15:56:00.250+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
-{"level":"info","time":"2024-09-16T15:56:45.984+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"error","time":"2024-09-16T15:56:50.179+0800","file":"controller/last.go:32","msg":"PhysicalQuantities: unsupported relations for schema Last","ApplicationName":"杜拜","message":"fail to get last"}
-{"level":"info","time":"2024-09-16T15:57:13.106+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
-{"level":"info","time":"2024-09-16T16:45:16.621+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T16:15:57.156+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T16:16:15.228+0800","file":"controller/last.go:33","msg":"invalid field found for struct auto-monitoring/internal/adapter/gorm/model.Last's field Station: define a valid foreign key for relations or implement the Valuer/Scanner interface","ApplicationName":"杜拜","message":"fail to get last"}
+{"level":"info","time":"2024-09-18T16:33:00.575+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T16:35:05.928+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T16:36:06.147+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T16:36:39.304+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T16:38:12.478+0800","file":"controller/device.go:122","msg":"invalid field found for struct auto-monitoring/internal/adapter/gorm/model.DeviceStation's field Station: define a valid foreign key for relations or implement the Valuer/Scanner interface","ApplicationName":"杜拜","message":"fail to get device stations"}
+{"level":"info","time":"2024-09-18T16:41:55.202+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T17:02:22.343+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-18T17:13:07.281+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T17:13:09.166+0800","file":"controller/record.go:105","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"error","time":"2024-09-18T17:13:23.186+0800","file":"controller/record.go:105","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-18T17:13:41.152+0800","file":"gin@v1.9.1/context.go:174","msg":"Middleware logger","ApplicationName":"杜拜","IP_From":"127.0.0.1","method":"POST","status":200,"url":"/api/v1/Record/Station/Sensor/JSON","request":"{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}"}
+{"level":"error","time":"2024-09-18T17:14:34.306+0800","file":"controller/record.go:105","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"error","time":"2024-09-18T17:19:31.586+0800","file":"controller/record.go:105","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"error","time":"2024-09-18T17:22:25.954+0800","file":"controller/record.go:105","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-18T17:23:18.711+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T17:23:21.966+0800","file":"controller/record.go:107","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-18T17:27:34.684+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T17:27:38.338+0800","file":"controller/record.go:107","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-18T17:30:12.383+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-18T17:30:15.041+0800","file":"controller/record.go:107","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-19T09:13:04.546+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-19T09:13:18.224+0800","file":"gin@v1.9.1/context.go:174","msg":"Middleware logger","ApplicationName":"杜拜","IP_From":"127.0.0.1","method":"POST","status":200,"url":"/api/v1/Record/Station/Sensor/JSON","request":"{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}"}
+{"level":"error","time":"2024-09-19T09:13:22.864+0800","file":"controller/record.go:107","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-19T09:14:37.293+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-19T09:14:48.142+0800","file":"controller/record.go:107","msg":"station not found, uuid: ","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-19T09:19:26.438+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-19T09:19:27.997+0800","file":"gin@v1.9.1/context.go:174","msg":"Middleware logger","ApplicationName":"杜拜","IP_From":"127.0.0.1","method":"POST","status":200,"url":"/api/v1/Record/Station/Sensor/JSON","request":"{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}"}
+{"level":"info","time":"2024-09-19T09:21:11.722+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-19T09:21:13.015+0800","file":"gin@v1.9.1/context.go:174","msg":"Middleware logger","ApplicationName":"杜拜","IP_From":"127.0.0.1","method":"POST","status":200,"url":"/api/v1/Record/Station/Sensor/JSON","request":"{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}"}
+{"level":"info","time":"2024-09-19T09:36:53.398+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-19T09:36:55.256+0800","file":"gin@v1.9.1/context.go:174","msg":"Middleware logger","ApplicationName":"杜拜","IP_From":"127.0.0.1","method":"POST","status":200,"url":"/api/v1/Record/Station/Sensor/JSON","request":"{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}"}
+{"level":"info","time":"2024-09-19T09:47:47.145+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-19T10:01:10.471+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-19T10:02:44.101+0800","file":"controller/physical_quantity.go:29","msg":"record not found","ApplicationName":"杜拜","message":"query fail"}

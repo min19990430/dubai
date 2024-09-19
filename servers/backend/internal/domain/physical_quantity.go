@@ -3,14 +3,16 @@ package domain
 import "time"
 
 type PhysicalQuantity struct {
-	UUID       string `json:"uuid"`
-	Name       string `json:"name"`
-	FullName   string `json:"full_name"`
-	SiUnit     string `json:"si_unit"`
-	DeviceUUID string `json:"device_uuid"`
+	UUID     string `json:"uuid"`
+	Name     string `json:"name"`
+	FullName string `json:"full_name"`
+	SiUnit   string `json:"si_unit"`
+
+	DeviceUUID  string `json:"device_uuid"`
+	StationUUID string `json:"station_uuid"`
 
 	StatusCode string `json:"status_code"`
-	IsEnable   bool   `json:"-"`
+	IsEnable   bool   `json:"is_enable"`
 	Priority   int    `json:"priority"`
 	Source     string `json:"source"`
 

@@ -18,32 +18,51 @@ func NewLastRepository(gorm *gorm.DB) irepository.ILastRepository {
 	}
 }
 
-func (l *LastRepository) GetLast() ([]domain.Last, error) {
-	var lastPO []model.Last
-	err := l.gorm.Table("device").
-		Preload("Station").
-		Preload("PhysicalQuantitiesWithEvaluate", func(db *gorm.DB) *gorm.DB {
+func (l *LastRepository) GetStationLast() ([]domain.StationLast, error) {
+	var lastPO []model.StationLast
+	err := l.gorm.
+		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
 			return db.Where("is_enable = true").Order("physical_quantity.priority")
 		}).
-		Preload("PhysicalQuantitiesWithEvaluate.PhysicalQuantityEvaluates", func(db *gorm.DB) *gorm.DB {
-			return db.Where("is_enable = true").Order("physical_quantity_evaluate.priority")
-		}).
-		Where("is_enable = true").
 		Order("priority").
 		Find(&lastPO).Error
 	if err != nil {
 		return nil, err
 	}
 
-	var last []domain.Last
+	var last []domain.StationLast
 	for _, v := range lastPO {
-		var tempLast domain.Last
+		var tempLast domain.StationLast
 		tempLast.Station = v.Station.ToDomain()
 
+		for _, pq := range v.PhysicalQuantities {
+			tempLast.PhysicalQuantities = append(tempLast.PhysicalQuantities, pq.ToDomain())
+		}
+
+		last = append(last, tempLast)
+	}
+	return last, nil
+}
+
+func (l *LastRepository) GetDeviceLast() ([]domain.DeviceLast, error) {
+	var lastPO []model.DeviceLast
+	err := l.gorm.
+		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
+			return db.Where("is_enable = true").Order("physical_quantity.priority")
+		}).
+		Order("priority").
+		Find(&lastPO).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var last []domain.DeviceLast
+	for _, v := range lastPO {
+		var tempLast domain.DeviceLast
 		tempLast.Device = v.Device.ToDomain()
 
-		for _, pq := range v.PhysicalQuantitiesWithEvaluate {
-			tempLast.PhysicalQuantitiesWithEvaluate = append(tempLast.PhysicalQuantitiesWithEvaluate, pq.ToDomain())
+		for _, pq := range v.PhysicalQuantities {
+			tempLast.PhysicalQuantities = append(tempLast.PhysicalQuantities, pq.ToDomain())
 		}
 
 		last = append(last, tempLast)

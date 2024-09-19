@@ -18,7 +18,8 @@ type LastController struct {
 func NewLastController(
 	response response.IResponse,
 	usecase *usecase.LastUsecase,
-	alarmRecord *usecase.AlarmRecordUsecase) *LastController {
+	alarmRecord *usecase.AlarmRecordUsecase,
+) *LastController {
 	return &LastController{
 		response:    response,
 		last:        *usecase,
@@ -26,23 +27,46 @@ func NewLastController(
 	}
 }
 
-func (lc *LastController) GetLast(c *gin.Context) {
-	lasts, err := lc.last.GetLast()
+func (lc *LastController) GetStationLast(c *gin.Context) {
+	lasts, err := lc.last.GetStationLast()
 	if err != nil {
-		lc.response.FailWithError(c, "fail to get last", err)
+		lc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
 	alarmRecords, err := lc.alarmRecord.ListDetail(
-		carbon.Now().StartOfDay().ToStdTime(),
-		carbon.Now().EndOfDay().ToStdTime(),
+		carbon.Now().StartOfDay().StdTime(),
+		carbon.Now().EndOfDay().StdTime(),
 		domain.AlarmRecord{}, true)
 	if err != nil {
-		lc.response.FailWithError(c, "fail to get alarm records", err)
+		lc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
-	lc.response.SuccessWithData(c, "success",
+	lc.response.SuccessWithData(c, querySuccess,
+		gin.H{
+			"last":  lasts,
+			"alarm": alarmRecords,
+		})
+}
+
+func (lc *LastController) GetDeviceLast(c *gin.Context) {
+	lasts, err := lc.last.GetDeviceLast()
+	if err != nil {
+		lc.response.FailWithError(c, queryFail, err)
+		return
+	}
+
+	alarmRecords, err := lc.alarmRecord.ListDetail(
+		carbon.Now().StartOfDay().StdTime(),
+		carbon.Now().EndOfDay().StdTime(),
+		domain.AlarmRecord{}, true)
+	if err != nil {
+		lc.response.FailWithError(c, queryFail, err)
+		return
+	}
+
+	lc.response.SuccessWithData(c, querySuccess,
 		gin.H{
 			"last":  lasts,
 			"alarm": alarmRecords,

@@ -7,7 +7,6 @@ import (
 
 	"auto-monitoring/internal/domain"
 	"auto-monitoring/internal/domain/irepository"
-	"auto-monitoring/pkg/expression"
 )
 
 type AlarmUsecase struct {
@@ -34,7 +33,12 @@ func (au *AlarmUsecase) Check(alarmSettings []domain.AlarmSetting, inputTime, up
 		}
 
 		// 檢查規則是否觸發
-		expressionResult, expressionErr := expression.IsTrue(alarmSetting.BooleanExpression, value)
+		// expressionResult, expressionErr := expression.IsTrue(alarmSetting.BooleanExpression, value)
+		// if expressionErr != nil {
+		// 	continue
+		// }
+
+		expressionResult, expressionErr := au.alarmSetting.ExpressionCheck(alarmSetting, value)
 		if expressionErr != nil {
 			continue
 		}

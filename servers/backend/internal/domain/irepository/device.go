@@ -8,8 +8,7 @@ type IDeviceRepository interface {
 	List(domain.Device) ([]domain.Device, error)
 	ListIn(domain.Device, []string) ([]domain.Device, error)
 	UpdateLastTime(domain.Device) error
-}
-
-type IDeviceStationRepository interface {
-	List(domain.DeviceStation) ([]domain.DeviceStation, error)
+	Create(domain.Device) error
+	Update(domain.Device) error
+	Delete(domain.Device) error
 }
