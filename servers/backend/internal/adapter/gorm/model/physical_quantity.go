@@ -144,9 +144,7 @@ func (p PhysicalQuantityWithEvaluate) FromDomain(domain domain.PhysicalQuantityW
 }
 
 type PhysicalQuantityCatchDetail struct {
-	PhysicalQuantity
-
-	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `gorm:"references:UUID;foreignKey:PhysicalQuantityUUID"`
+	PhysicalQuantityWithEvaluate
 
 	Device Device `gorm:"references:DeviceUUID;foreignKey:UUID"`
 
@@ -163,15 +161,10 @@ func (p PhysicalQuantityCatchDetail) ToDomain() domain.PhysicalQuantityCatchDeta
 		tempAlarmSettings = append(tempAlarmSettings, alarmSetting.ToDomain())
 	}
 
-	tempPhysicalQuantityEvaluates := []domain.PhysicalQuantityEvaluate{}
-	for _, physicalQuantityEvaluate := range p.PhysicalQuantityEvaluates {
-		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, physicalQuantityEvaluate.ToDomain())
-	}
-
 	return domain.PhysicalQuantityCatchDetail{
-		PhysicalQuantity: p.PhysicalQuantity.ToDomain(),
-		Device:           p.Device.ToDomain(),
-		AlarmSettings:    tempAlarmSettings,
+		PhysicalQuantityWithEvaluate: p.PhysicalQuantityWithEvaluate.ToDomain(),
+		Device:                       p.Device.ToDomain(),
+		AlarmSettings:                tempAlarmSettings,
 	}
 }
 
@@ -181,14 +174,9 @@ func (p PhysicalQuantityCatchDetail) FromDomain(domain domain.PhysicalQuantityCa
 		tempAlarmSettings = append(tempAlarmSettings, AlarmSetting{}.FromDomain(alarmSetting))
 	}
 
-	tempPhysicalQuantityEvaluates := []PhysicalQuantityEvaluate{}
-	for _, physicalQuantityEvaluate := range domain.PhysicalQuantityEvaluates {
-		tempPhysicalQuantityEvaluates = append(tempPhysicalQuantityEvaluates, PhysicalQuantityEvaluate{}.FromDomain(physicalQuantityEvaluate))
-	}
-
 	return PhysicalQuantityCatchDetail{
-		PhysicalQuantity: PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
-		Device:           Device{}.FromDomain(domain.Device),
-		AlarmSettings:    tempAlarmSettings,
+		PhysicalQuantityWithEvaluate: PhysicalQuantityWithEvaluate{}.FromDomain(domain.PhysicalQuantityWithEvaluate),
+		Device:                       Device{}.FromDomain(domain.Device),
+		AlarmSettings:                tempAlarmSettings,
 	}
 }

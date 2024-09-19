@@ -37,9 +37,7 @@ type PhysicalQuantityWithEvaluate struct {
 }
 
 type PhysicalQuantityCatchDetail struct {
-	PhysicalQuantity `json:"physical_quantity"`
-
-	PhysicalQuantityEvaluates []PhysicalQuantityEvaluate `json:"physical_quantity_evaluates"`
+	PhysicalQuantityWithEvaluate
 
 	Device Device `gorm:"references:DeviceUUID;foreignKey:UUID" json:"device"`
 

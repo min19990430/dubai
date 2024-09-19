@@ -11,29 +11,35 @@ import (
 
 type CatchInputUsecase struct {
 	physicalQuantity            irepository.IPhysicalQuantityRepository
+	physicalQuantityEvaluate    irepository.IPhysicalQuantityEvaluateRepository
 	physicalQuantityCatchDetail irepository.IPhysicalQuantityCatchDetailRepository
 	device                      irepository.IDeviceRepository
 	station                     irepository.IStationRepository
 	record                      irepository.IRecordRepository
 
-	alarmUsecase AlarmUsecase
+	alarmUsecase                    AlarmUsecase
+	physicalQuantityEvaluateUsecase PhysicalQuantityEvaluateUsecase
 }
 
 func NewCatchInputUsecase(
 	physicalQuantity irepository.IPhysicalQuantityRepository,
+	physicalQuantityEvaluate irepository.IPhysicalQuantityEvaluateRepository,
 	physicalQuantityCatchDetail irepository.IPhysicalQuantityCatchDetailRepository,
 	device irepository.IDeviceRepository,
 	station irepository.IStationRepository,
 	record irepository.IRecordRepository,
 	alarmUsecase AlarmUsecase,
+	physicalQuantityEvaluateUsecase PhysicalQuantityEvaluateUsecase,
 ) *CatchInputUsecase {
 	return &CatchInputUsecase{
-		physicalQuantity:            physicalQuantity,
-		physicalQuantityCatchDetail: physicalQuantityCatchDetail,
-		device:                      device,
-		station:                     station,
-		record:                      record,
-		alarmUsecase:                alarmUsecase,
+		physicalQuantity:                physicalQuantity,
+		physicalQuantityEvaluate:        physicalQuantityEvaluate,
+		physicalQuantityCatchDetail:     physicalQuantityCatchDetail,
+		device:                          device,
+		station:                         station,
+		record:                          record,
+		alarmUsecase:                    alarmUsecase,
+		physicalQuantityEvaluateUsecase: physicalQuantityEvaluateUsecase,
 	}
 }
 
@@ -61,7 +67,7 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 		return listErr
 	}
 
-	pqcdMap := mappingStruct(pqcd)
+	pqcdMap := ciu.mappingStruct(pqcd)
 
 	// 更新裝置時間
 	updatedDevice := domain.Device{}
@@ -136,11 +142,79 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 			}); createErr != nil {
 			return createErr
 		}
+
+		// 處理延伸物理量
+		if err := ciu.catchEvaluate(physicalQuantityCatchDetail.PhysicalQuantityEvaluates, input.Datetime, insertValue); err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
-func mappingStruct(pqcds []domain.PhysicalQuantityCatchDetail) map[string]domain.PhysicalQuantityCatchDetail {
+func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, inputTime time.Time, value float64) error {
+	if len(pqes) == 0 {
+		return nil
+	}
+
+	for _, pqe := range pqes {
+		// 找到目標物理量
+		targetPQ, findErr := ciu.physicalQuantity.FindByUUID(pqe.TargetPhysicalQuantityUUID)
+		if findErr != nil {
+			return findErr
+		}
+
+		// 檢查UpdateTime
+		if pqe.UpdateTime == nil {
+			pqe.UpdateTime = &time.Time{}
+			*pqe.UpdateTime = time.Date(2000, 1, 1, 0, 0, 0, 0, time.Local)
+		}
+
+		// 計算公式
+		insertValue, err := ciu.physicalQuantityEvaluateUsecase.Evaluate(pqe, value)
+		if err != nil {
+			return err
+		}
+
+		pqe.Value = insertValue
+		pqe.Data = value
+
+		// 如果是新資料，則更新資料
+		if inputTime.After(*pqe.UpdateTime) {
+			*pqe.UpdateTime = inputTime
+			if updateErr := ciu.physicalQuantityEvaluate.UpdateLast(pqe); updateErr != nil {
+				return updateErr
+			}
+
+			// 更新目標物理量
+			if targetPQ.UpdateTime == nil {
+				targetPQ.UpdateTime = &time.Time{}
+			}
+			*targetPQ.UpdateTime = inputTime
+			targetPQ.Value = insertValue
+			targetPQ.Data = value
+			if updateErr := ciu.physicalQuantity.UpdateLast(targetPQ); updateErr != nil {
+				return updateErr
+			}
+		}
+
+		// 插入資料
+		if createErr := ciu.record.Create(targetPQ.StationUUID,
+			domain.Record{
+				DeviceUUID:           targetPQ.DeviceUUID,
+				PhysicalQuantityUUID: pqe.TargetPhysicalQuantityUUID,
+				Datetime:             inputTime,
+				Value:                pqe.Value,
+				Data:                 pqe.Data,
+				Status:               "10",
+			}); createErr != nil {
+			return createErr
+		}
+	}
+
+	return nil
+}
+
+func (CatchInputUsecase) mappingStruct(pqcds []domain.PhysicalQuantityCatchDetail) map[string]domain.PhysicalQuantityCatchDetail {
 	pqcdMap := make(map[string]domain.PhysicalQuantityCatchDetail)
 	for _, pqcd := range pqcds {
 		pqcdMap[pqcd.UUID] = pqcd

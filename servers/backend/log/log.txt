@@ -34,3 +34,4 @@
 {"level":"info","time":"2024-09-19T09:47:47.145+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"info","time":"2024-09-19T10:01:10.471+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"error","time":"2024-09-19T10:02:44.101+0800","file":"controller/physical_quantity.go:29","msg":"record not found","ApplicationName":"杜拜","message":"query fail"}
+{"level":"info","time":"2024-09-19T13:23:39.787+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}

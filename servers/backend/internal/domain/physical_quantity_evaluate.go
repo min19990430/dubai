@@ -3,11 +3,12 @@ package domain
 import "time"
 
 type PhysicalQuantityEvaluate struct {
-	UUID                 string `json:"uuid"`
-	PhysicalQuantityUUID string `json:"physical_quantity_uuid"`
-	Name                 string `json:"name"`
-	FullName             string `json:"full_name"`
-	SiUnit               string `json:"si_unit"`
+	UUID                       string `json:"uuid"`
+	PhysicalQuantityUUID       string `json:"physical_quantity_uuid"`
+	TargetPhysicalQuantityUUID string `json:"target_physical_quantity_uuid"`
+	Name                       string `json:"name"`
+	FullName                   string `json:"full_name"`
+	SiUnit                     string `json:"si_unit"`
 
 	IsEnable bool `json:"-"`
 	Priority int  `json:"priority"`
