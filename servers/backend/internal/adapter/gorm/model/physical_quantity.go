@@ -9,16 +9,19 @@ import (
 )
 
 type PhysicalQuantity struct {
-	UUID       string `gorm:"column:uuid;not null;primary_key;type:char(36)" json:"uuid"`
-	Name       string `gorm:"column:name;not null;type:varchar(45)" json:"name"`
-	FullName   string `gorm:"column:full_name;not null;type:varchar(45)" json:"full_name"`
-	SiUnit     string `gorm:"column:si_unit;default:'';type:varchar(45)" json:"si_unit"`
-	DeviceUUID string `gorm:"column:device_uuid;type:char(36);not null" json:"device_uuid"`
+	UUID     string `gorm:"column:uuid;not null;primary_key;type:char(36)" json:"uuid"`
+	Name     string `gorm:"column:name;not null;type:varchar(45)" json:"name"`
+	FullName string `gorm:"column:full_name;not null;type:varchar(45)" json:"full_name"`
+	SiUnit   string `gorm:"column:si_unit;default:'';type:varchar(45)" json:"si_unit"`
+
+	DeviceUUID  string `gorm:"column:device_uuid;type:char(36);not null" json:"device_uuid"`
+	StationUUID string `gorm:"column:station_uuid;type:char(36);not null" json:"station_uuid"`
 
 	StatusCode string `gorm:"column:status_code;not null;type:varchar(4)" json:"status_code"`
 	IsEnable   bool   `gorm:"column:is_enable;not null;default:0;type:tinyint(4)" json:"-"`
 	Priority   int    `gorm:"column:priority;default:0;type:int(11)" json:"priority"`
-	Source     string `gorm:"column:source;default:'';type:varchar(45)" json:"source"`
+
+	Source string `gorm:"column:source;default:'';type:varchar(45)" json:"source"`
 
 	PhysicalQuantityDataType   string `gorm:"column:physical_quantity_data_type;default:'Decimal';type:varchar(45)" json:"physical_quantity_data_type"`
 	AggregateCalculationMethod string `gorm:"column:aggregate_calculation_method;default:'avg';type:varchar(45)" json:"aggregate_calculation_method"`
@@ -33,6 +36,8 @@ type PhysicalQuantity struct {
 	Value      float64    `gorm:"column:value;type:decimal(24,6)" json:"value"`
 	Data       float64    `gorm:"column:data;type:decimal(24,6)" json:"data"`
 
+	CreatedAt *time.Time     `gorm:"column:created_at;type:datetime" json:"created_at"`
+	UpdatedAt *time.Time     `gorm:"column:updated_at;type:datetime" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime" json:"deleted_at,omitempty"`
 }
 
@@ -47,6 +52,7 @@ func (p PhysicalQuantity) ToDomain() domain.PhysicalQuantity {
 		FullName:                   p.FullName,
 		SiUnit:                     p.SiUnit,
 		DeviceUUID:                 p.DeviceUUID,
+		StationUUID:                p.StationUUID,
 		StatusCode:                 p.StatusCode,
 		IsEnable:                   p.IsEnable,
 		Priority:                   p.Priority,
@@ -70,6 +76,7 @@ func (p PhysicalQuantity) FromDomain(domain domain.PhysicalQuantity) PhysicalQua
 		FullName:                   domain.FullName,
 		SiUnit:                     domain.SiUnit,
 		DeviceUUID:                 domain.DeviceUUID,
+		StationUUID:                domain.StationUUID,
 		StatusCode:                 domain.StatusCode,
 		IsEnable:                   domain.IsEnable,
 		Priority:                   domain.Priority,
@@ -162,10 +169,9 @@ func (p PhysicalQuantityCatchDetail) ToDomain() domain.PhysicalQuantityCatchDeta
 	}
 
 	return domain.PhysicalQuantityCatchDetail{
-		PhysicalQuantity:          p.PhysicalQuantity.ToDomain(),
-		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
-		Device:                    p.Device.ToDomain(),
-		AlarmSettings:             tempAlarmSettings,
+		PhysicalQuantity: p.PhysicalQuantity.ToDomain(),
+		Device:           p.Device.ToDomain(),
+		AlarmSettings:    tempAlarmSettings,
 	}
 }
 
@@ -181,9 +187,8 @@ func (p PhysicalQuantityCatchDetail) FromDomain(domain domain.PhysicalQuantityCa
 	}
 
 	return PhysicalQuantityCatchDetail{
-		PhysicalQuantity:          PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
-		PhysicalQuantityEvaluates: tempPhysicalQuantityEvaluates,
-		Device:                    Device{}.FromDomain(domain.Device),
-		AlarmSettings:             tempAlarmSettings,
+		PhysicalQuantity: PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
+		Device:           Device{}.FromDomain(domain.Device),
+		AlarmSettings:    tempAlarmSettings,
 	}
 }

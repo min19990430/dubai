@@ -6,3 +6,8 @@ type SignalInputMapping struct {
 	Pointer                    int    `json:"pointer"`
 	TargetPhysicalQuantityUUID string `json:"target_physical_quantity_uuid"`
 }
+
+type SignalInputMappingDetail struct {
+	SignalInputMapping
+	PhysicalQuantity PhysicalQuantity `json:"physical_quantity"`
+}

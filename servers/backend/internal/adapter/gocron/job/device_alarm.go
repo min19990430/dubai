@@ -33,9 +33,6 @@ func NewDeviceAlarmJob(logger *zap.Logger, deviceAlarmSetting *usecase.DeviceAla
 }
 
 func (daj *DeviceAlarmJob) deviceAlarmCheck() {
-	// FIXME: delete this line
-	log.Println(time.Now(), "device alarm check")
-
 	// 取得所有裝置
 	devices, _ := daj.device.List(domain.Device{IsEnable: true})
 	for _, device := range devices {

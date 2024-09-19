@@ -18,8 +18,8 @@ type AlarmSetting struct {
 	BooleanExpression string  `json:"boolean_expression,omitempty"`
 	LastOccurValue    float64 `json:"last_occur_value"`
 
-	LastAlarmOccurTime  *time.Time `json:"last_alarm_occur_time,omitempty"`
-	AlarmContentSetting *string    `json:"alarm_content_setting,omitempty"`
+	LastAlarmOccurTime  *time.Time `json:"last_alarm_occur_time"`
+	AlarmContentSetting *string    `json:"alarm_content_setting"`
 	UpdatedAt           *time.Time `json:"updated_at,omitempty"`
 }
 

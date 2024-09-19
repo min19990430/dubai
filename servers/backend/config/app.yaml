@@ -37,4 +37,4 @@ ratelimit:
   limit_per_minute: 600
 
 jwt:
-  expiration: "1d" #1 day
+  expiration: "24h" #1 day

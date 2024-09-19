@@ -10,7 +10,7 @@ import (
 
 type AlarmSetting struct {
 	UUID                 string `gorm:"primaryKey;column:uuid;type:char(36);not null" json:"uuid,omitempty"`
-	PhysicalQuantityUUID string `gorm:"unique;column:physical_quantity_uuid;type:char(36);not null" json:"physical_quantity_uuid,omitempty"`
+	PhysicalQuantityUUID string `gorm:"column:physical_quantity_uuid;type:char(36);not null" json:"physical_quantity_uuid,omitempty"`
 	Name                 string `gorm:"column:name;type:varchar(45)" json:"name"`
 	FullName             string `gorm:"column:full_name;type:varchar(45)" json:"full_name"`
 	Priority             int    `gorm:"column:priority;default:0;type:int(11)" json:"priority"`

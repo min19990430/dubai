@@ -49,7 +49,7 @@ func (d *DeviceRepository) List(device domain.Device) ([]domain.Device, error) {
 
 	deviceWherePO := model.Device{}.FromDomain(device)
 
-	err := d.gorm.Where(deviceWherePO).Find(&devicePOs).Order("priority").Error
+	err := d.gorm.Where(deviceWherePO).Order("priority").Find(&devicePOs).Error
 	if err != nil {
 		return nil, err
 	}
@@ -82,30 +82,28 @@ func (d *DeviceRepository) ListIn(device domain.Device, uuids []string) ([]domai
 	return devices, nil
 }
 
-type DeviceStationRepository struct {
-	gorm *gorm.DB
+func (d *DeviceRepository) Create(device domain.Device) error {
+	devicePO := model.Device{}.FromDomain(device)
+	return d.gorm.Create(&devicePO).Error
 }
 
-func NewDeviceStationRepository(gorm *gorm.DB) irepository.IDeviceStationRepository {
-	return &DeviceStationRepository{gorm: gorm}
+func (d *DeviceRepository) Update(device domain.Device) error {
+	devicePO := model.Device{}.FromDomain(device)
+	return d.gorm.Model(&devicePO).
+		Where("uuid = ?", device.UUID).
+		Updates(map[string]interface{}{
+			"id":           devicePO.ID,
+			"name":         devicePO.Name,
+			"is_enable":    devicePO.IsEnable,
+			"is_connected": devicePO.IsConnected,
+			"priority":     devicePO.Priority,
+			"lat":          devicePO.Lat,
+			"lon":          devicePO.Lon,
+			"description":  devicePO.Description,
+		}).Error
 }
 
-func (d *DeviceStationRepository) List(deviceStation domain.DeviceStation) ([]domain.DeviceStation, error) {
-	var deviceStationPOs []model.DeviceStation
-
-	deviceStationWherePO := model.DeviceStation{}.FromDomain(deviceStation)
-
-	err := d.gorm.Where(deviceStationWherePO).
-		Preload("Station").
-		Order("priority").
-		Find(&deviceStationPOs).Error
-	if err != nil {
-		return nil, err
-	}
-
-	var deviceStations []domain.DeviceStation
-	for _, deviceStationPO := range deviceStationPOs {
-		deviceStations = append(deviceStations, deviceStationPO.ToDomain())
-	}
-	return deviceStations, nil
+func (d *DeviceRepository) Delete(device domain.Device) error {
+	devicePO := model.Device{}.FromDomain(device)
+	return d.gorm.Where("uuid = ?", device.UUID).Delete(&devicePO).Error
 }

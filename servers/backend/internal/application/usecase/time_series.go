@@ -36,25 +36,13 @@ func (tsu *TimeSeriesUsecase) AggregateDataByStation(start, end time.Time, stati
 		return domain.TimeSeries{}, checkErr
 	}
 
-	devices, listErr := tsu.device.List(domain.Device{
+	var physicalQuantities []domain.PhysicalQuantity
+	physicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
 		StationUUID: stationUUID,
 		IsEnable:    true,
 	})
-	if listErr != nil {
-		return domain.TimeSeries{}, listErr
-	}
-
-	var physicalQuantities []domain.PhysicalQuantity
-	for _, device := range devices {
-		tempPhysicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
-			DeviceUUID: device.UUID,
-			IsEnable:   true,
-		})
-		if pqListErr != nil {
-			return domain.TimeSeries{}, pqListErr
-		}
-
-		physicalQuantities = append(physicalQuantities, tempPhysicalQuantities...)
+	if pqListErr != nil {
+		return domain.TimeSeries{}, pqListErr
 	}
 
 	timeSeriesList, aggregateErr := tsu.timeSeries.Aggregate(start, end, interval, physicalQuantities)
@@ -81,25 +69,12 @@ func (tsu *TimeSeriesUsecase) AggregateMapDataByStation(start, end time.Time, st
 		return nil, checkErr
 	}
 
-	devices, listErr := tsu.device.List(domain.Device{
+	physicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
 		StationUUID: stationUUID,
 		IsEnable:    true,
 	})
-	if listErr != nil {
-		return nil, listErr
-	}
-
-	var physicalQuantities []domain.PhysicalQuantity
-	for _, device := range devices {
-		tempPhysicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
-			DeviceUUID: device.UUID,
-			IsEnable:   true,
-		})
-		if pqListErr != nil {
-			return nil, pqListErr
-		}
-
-		physicalQuantities = append(physicalQuantities, tempPhysicalQuantities...)
+	if pqListErr != nil {
+		return nil, pqListErr
 	}
 
 	return tsu.timeSeries.AggregateMap(start, end, interval, physicalQuantities)

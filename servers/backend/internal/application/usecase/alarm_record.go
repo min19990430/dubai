@@ -68,17 +68,7 @@ func (aru *AlarmRecordUsecase) ListByDeviceUUID(startTime, endTime time.Time, de
 }
 
 func (aru *AlarmRecordUsecase) ListByStationUUID(startTime, endTime time.Time, stationUUID string, reverse bool) ([]domain.AlarmRecord, error) {
-	devices, listErr := aru.device.List(domain.Device{StationUUID: stationUUID, IsEnable: true})
-	if listErr != nil {
-		return nil, listErr
-	}
-
-	var deviceUUIDs = make([]string, len(devices))
-	for i, d := range devices {
-		deviceUUIDs[i] = d.UUID
-	}
-
-	physicalQuantities, listErr := aru.physicalQuantity.ListInDeviceUUIDs(domain.PhysicalQuantity{}, deviceUUIDs)
+	physicalQuantities, listErr := aru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID})
 	if listErr != nil {
 		return nil, listErr
 	}
@@ -98,12 +88,7 @@ func (aru *AlarmRecordUsecase) ListByStationUUID(startTime, endTime time.Time, s
 		alarmSettingUUIDs[i] = as.UUID
 	}
 
-	alarmRecords, listErr := aru.alarmRecord.ListIn(startTime, endTime, alarmSettingUUIDs, reverse)
-	if listErr != nil {
-		return nil, listErr
-	}
-
-	return alarmRecords, nil
+	return aru.alarmRecord.ListIn(startTime, endTime, alarmSettingUUIDs, reverse)
 }
 
 func (aru *AlarmRecordUsecase) ListDetail(startTime, endTime time.Time, alarmRecord domain.AlarmRecord, reverse bool) ([]domain.AlarmRecordDetail, error) {
@@ -139,13 +124,13 @@ func (aru *AlarmRecordUsecase) ListDetail(startTime, endTime time.Time, alarmRec
 	}
 
 	// 收尋/填充 device
-	alarmRecordDetails, devices, fillErr := aru.fillDevice(alarmRecordDetails, physicalQuantities)
+	alarmRecordDetails, fillErr = aru.fillDevice(alarmRecordDetails, physicalQuantities)
 	if fillErr != nil {
 		return nil, fillErr
 	}
 
 	// 收尋/填充 station
-	alarmRecordDetails, _, fillErr = aru.fillStation(alarmRecordDetails, devices)
+	alarmRecordDetails, fillErr = aru.fillStation(alarmRecordDetails, physicalQuantities)
 	if fillErr != nil {
 		return nil, fillErr
 	}
@@ -202,12 +187,13 @@ func (aru *AlarmRecordUsecase) fillPhysicalQuantity(alarmRecordDetails []domain.
 		alarmRecordDetails[i].PhysicalQuantityName = physicalQuantityMap[ar.PhysicalQuantityUUID].Name
 		alarmRecordDetails[i].PhysicalQuantityFullName = physicalQuantityMap[ar.PhysicalQuantityUUID].FullName
 		alarmRecordDetails[i].DeviceUUID = physicalQuantityMap[ar.PhysicalQuantityUUID].DeviceUUID
+		alarmRecordDetails[i].StationUUID = physicalQuantityMap[ar.PhysicalQuantityUUID].StationUUID
 	}
 
 	return alarmRecordDetails, physicalQuantities, nil
 }
 
-func (aru *AlarmRecordUsecase) fillDevice(alarmRecordDetails []domain.AlarmRecordDetail, physicalQuantities []domain.PhysicalQuantity) ([]domain.AlarmRecordDetail, []domain.Device, error) {
+func (aru *AlarmRecordUsecase) fillDevice(alarmRecordDetails []domain.AlarmRecordDetail, physicalQuantities []domain.PhysicalQuantity) ([]domain.AlarmRecordDetail, error) {
 	uniquPhysicalQuantityPOs := lo.UniqBy(physicalQuantities, func(pq domain.PhysicalQuantity) string {
 		return pq.DeviceUUID
 	})
@@ -219,7 +205,7 @@ func (aru *AlarmRecordUsecase) fillDevice(alarmRecordDetails []domain.AlarmRecor
 
 	devices, listErr := aru.device.ListIn(domain.Device{}, deviceUniqUUIDs)
 	if listErr != nil {
-		return nil, nil, listErr
+		return nil, listErr
 	}
 
 	deviceMap := lo.KeyBy(devices, func(d domain.Device) string {
@@ -229,25 +215,24 @@ func (aru *AlarmRecordUsecase) fillDevice(alarmRecordDetails []domain.AlarmRecor
 	for i, ar := range alarmRecordDetails {
 		alarmRecordDetails[i].DeviceID = deviceMap[ar.DeviceUUID].ID
 		alarmRecordDetails[i].DeviceName = deviceMap[ar.DeviceUUID].Name
-		alarmRecordDetails[i].StationUUID = deviceMap[ar.DeviceUUID].StationUUID
 	}
 
-	return alarmRecordDetails, devices, nil
+	return alarmRecordDetails, nil
 }
 
-func (aru *AlarmRecordUsecase) fillStation(alarmRecordDetails []domain.AlarmRecordDetail, devices []domain.Device) ([]domain.AlarmRecordDetail, []domain.Station, error) {
-	uniquDevicePOs := lo.UniqBy(devices, func(d domain.Device) string {
-		return d.StationUUID
+func (aru *AlarmRecordUsecase) fillStation(alarmRecordDetails []domain.AlarmRecordDetail, physicalQuantities []domain.PhysicalQuantity) ([]domain.AlarmRecordDetail, error) {
+	uniquPhysicalQuantityPOs := lo.UniqBy(physicalQuantities, func(pq domain.PhysicalQuantity) string {
+		return pq.StationUUID
 	})
 
-	stationUniqUUIDs := make([]string, len(uniquDevicePOs))
-	for i, d := range uniquDevicePOs {
+	stationUniqUUIDs := make([]string, len(uniquPhysicalQuantityPOs))
+	for i, d := range uniquPhysicalQuantityPOs {
 		stationUniqUUIDs[i] = d.StationUUID
 	}
 
 	stations, listErr := aru.Station.ListIn(domain.Station{}, stationUniqUUIDs)
 	if listErr != nil {
-		return nil, nil, listErr
+		return nil, listErr
 	}
 
 	stationMap := lo.KeyBy(stations, func(s domain.Station) string {
@@ -259,5 +244,5 @@ func (aru *AlarmRecordUsecase) fillStation(alarmRecordDetails []domain.AlarmReco
 		alarmRecordDetails[i].StationName = stationMap[ar.StationUUID].Name
 	}
 
-	return alarmRecordDetails, stations, nil
+	return alarmRecordDetails, nil
 }

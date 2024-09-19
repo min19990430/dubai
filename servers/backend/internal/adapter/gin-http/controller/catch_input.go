@@ -62,5 +62,5 @@ func (cic *CatchInputController) CatchSignalInput(c *gin.Context) {
 		return
 	}
 
-	cic.response.Success(c, "success")
+	cic.response.Success(c, catchSuccess)
 }

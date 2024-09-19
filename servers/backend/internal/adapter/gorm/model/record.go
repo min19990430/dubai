@@ -22,7 +22,6 @@ func (Record) TableName() string {
 
 func (r Record) FromDomain(domain domain.Record) Record {
 	return Record{
-		// StationUUID:          domain.StationUUID,
 		DeviceUUID:           domain.DeviceUUID,
 		PhysicalQuantityUUID: domain.PhysicalQuantityUUID,
 		Datetime:             domain.Datetime,
@@ -34,7 +33,6 @@ func (r Record) FromDomain(domain domain.Record) Record {
 
 func (r Record) ToDomain() domain.Record {
 	return domain.Record{
-		// StationUUID:          r.StationUUID,
 		DeviceUUID:           r.DeviceUUID,
 		PhysicalQuantityUUID: r.PhysicalQuantityUUID,
 		Datetime:             r.Datetime,

@@ -19,6 +19,8 @@ func NewLastRouter(lastController *controller.LastController) *LastRouter {
 func (lr *LastRouter) Setup(router *gin.RouterGroup) {
 	lastGroup := router.Group("/v1/Last")
 	{
-		lastGroup.GET("", lr.lastController.GetLast)
+		// lastGroup.GET("", lr.lastController.GetLast)
+		lastGroup.GET("/Station", lr.lastController.GetStationLast)
+		lastGroup.GET("/Device", lr.lastController.GetDeviceLast)
 	}
 }

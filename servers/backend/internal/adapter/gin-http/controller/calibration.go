@@ -55,15 +55,8 @@ func (cc *CalibrationController) GetList(c *gin.Context) {
 		return
 	}
 
-	station, err := cc.station.FindByUUID(device.StationUUID)
-	if err != nil {
-		cc.response.FailWithError(c, queryFail, err)
-		return
-	}
-
-	cc.response.SuccessWithData(c, "success",
+	cc.response.SuccessWithData(c, querySuccess,
 		gin.H{
-			"station":     station,
 			"device":      device,
 			"calibration": result,
 		})

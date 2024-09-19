@@ -17,4 +17,7 @@ type IPhysicalQuantityRepository interface {
 	ListInDeviceUUIDs(domain.PhysicalQuantity, []string) ([]domain.PhysicalQuantity, error)
 	UpdateLast(domain.PhysicalQuantity) error
 	UpdateStatus(domain.PhysicalQuantity, string) error
+	Create(domain.PhysicalQuantity) error
+	Update(domain.PhysicalQuantity) error
+	Delete(domain.PhysicalQuantity) error
 }

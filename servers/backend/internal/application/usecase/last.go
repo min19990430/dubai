@@ -17,6 +17,10 @@ func NewLastUsecase(
 	}
 }
 
-func (lu *LastUsecase) GetLast() ([]domain.Last, error) {
-	return lu.last.GetLast()
+func (lu *LastUsecase) GetStationLast() ([]domain.StationLast, error) {
+	return lu.last.GetStationLast()
+}
+
+func (lu *LastUsecase) GetDeviceLast() ([]domain.DeviceLast, error) {
+	return lu.last.GetDeviceLast()
 }

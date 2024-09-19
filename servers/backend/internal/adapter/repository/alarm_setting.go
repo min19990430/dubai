@@ -9,6 +9,7 @@ import (
 	linenotify "auto-monitoring/internal/adapter/line-notify"
 	"auto-monitoring/internal/domain"
 	"auto-monitoring/internal/domain/irepository"
+	"auto-monitoring/pkg/expression"
 )
 
 type AlarmSettingRepository struct {
@@ -96,6 +97,27 @@ func (a *AlarmSettingRepository) ListByDeviceUUID(deviceUUID string) ([]domain.P
 	return pqAlarmSettings, nil
 }
 
+func (a *AlarmSettingRepository) List(alarmSetting domain.AlarmSetting) ([]domain.AlarmSetting, error) {
+	var alarmSettingsPO []model.AlarmSetting
+
+	alarmSettingWherePO := model.AlarmSetting{}.FromDomain(alarmSetting)
+
+	err := a.gorm.Table("alarm_setting").
+		Where(alarmSettingWherePO).
+		Order("priority").
+		Find(&alarmSettingsPO).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var alarmSettings []domain.AlarmSetting
+	for _, alarmSettingPO := range alarmSettingsPO {
+		alarmSettings = append(alarmSettings, alarmSettingPO.ToDomain())
+	}
+
+	return alarmSettings, nil
+}
+
 func (a *AlarmSettingRepository) ListIn(alarmSetting domain.AlarmSetting, uuids []string) ([]domain.AlarmSetting, error) {
 	var alarmSettingsPO []model.AlarmSetting
 
@@ -138,4 +160,38 @@ func (a *AlarmSettingRepository) ListInPhysicalQuantityUUIDs(alarmSetting domain
 	}
 
 	return alarmSettings, nil
+}
+
+func (a *AlarmSettingRepository) Create(alarmSetting domain.AlarmSetting) error {
+	alarmSettingPO := model.AlarmSetting{}.FromDomain(alarmSetting)
+
+	return a.gorm.Create(&alarmSettingPO).Error
+}
+
+func (a *AlarmSettingRepository) Update(alarmSetting domain.AlarmSetting) error {
+	alarmSettingPO := model.AlarmSetting{}.FromDomain(alarmSetting)
+
+	return a.gorm.Model(&alarmSettingPO).
+		Where("uuid = ?", alarmSettingPO.UUID).
+		Updates(map[string]interface{}{
+			"physical_quantity_uuid": alarmSettingPO.PhysicalQuantityUUID,
+			"name":                   alarmSettingPO.Name,
+			"full_name":              alarmSettingPO.FullName,
+			"priority":               alarmSettingPO.Priority,
+			"is_enable":              alarmSettingPO.IsEnable,
+			"is_notify":              alarmSettingPO.IsNotify,
+			"is_activated":           alarmSettingPO.IsActivated,
+			"boolean_expression":     alarmSettingPO.BooleanExpression,
+			"alarm_content_setting":  alarmSettingPO.AlarmContentSetting,
+		}).Error
+}
+
+func (a *AlarmSettingRepository) Delete(alarmSetting domain.AlarmSetting) error {
+	alarmSettingPO := model.AlarmSetting{}.FromDomain(alarmSetting)
+
+	return a.gorm.Where("uuid = ?", alarmSettingPO.UUID).Delete(&alarmSettingPO).Error
+}
+
+func (a *AlarmSettingRepository) ExpressionCheck(alarmSetting domain.AlarmSetting, value float64) (bool, error) {
+	return expression.IsTrue(alarmSetting.BooleanExpression, value)
 }

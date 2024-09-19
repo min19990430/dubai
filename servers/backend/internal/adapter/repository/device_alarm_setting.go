@@ -46,6 +46,23 @@ func (das *DeviceAlarmSettingRepository) List(deviceAlarmSetting domain.DeviceAl
 	return deviceAlarmSettings, nil
 }
 
+func (das *DeviceAlarmSettingRepository) ListInDeviceUUIDs(deviceAlarmSetting domain.DeviceAlarmSetting, deviceUUIDs []string) ([]domain.DeviceAlarmSetting, error) {
+	var deviceAlarmSettingPOs []model.DeviceAlarmSetting
+
+	deviceAlarmSettingWherePO := model.DeviceAlarmSetting{}.FromDomain(deviceAlarmSetting)
+
+	err := das.db.Where(deviceAlarmSettingWherePO).Where("device_uuid IN (?)", deviceUUIDs).Find(&deviceAlarmSettingPOs).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var deviceAlarmSettings []domain.DeviceAlarmSetting
+	for _, deviceAlarmSetting := range deviceAlarmSettingPOs {
+		deviceAlarmSettings = append(deviceAlarmSettings, deviceAlarmSetting.ToDomain())
+	}
+	return deviceAlarmSettings, nil
+}
+
 func (das *DeviceAlarmSettingRepository) UpdateStatusAndTime(deviceAlarmSetting domain.DeviceAlarmSetting) error {
 	deviceAlarmSettingPO := model.DeviceAlarmSetting{
 		UUID:          deviceAlarmSetting.UUID,

@@ -22,30 +22,55 @@ func NewRecordRepository(gorm *gorm.DB) irepository.IRecordRepository {
 	return &RecordRepository{gorm: gorm}
 }
 
+func (r *RecordRepository) Create(tableName string, record domain.Record) error {
+	recordsPO := model.Record{}.FromDomain(record)
+
+	err := r.gorm.Table(tableName).Create(&recordsPO).Error
+	if err != nil {
+		var mysqlErr *mysql.MySQLError
+		// if duplicate key, not error
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+			return nil
+		}
+
+		// if table is not created
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1146 {
+			if createErr := r.createTable(tableName); createErr != nil {
+				return createErr
+			}
+			err = r.gorm.Table(tableName).Create(&recordsPO).Error
+		}
+
+		return err
+	}
+
+	return nil
+}
+
 func (r *RecordRepository) CreateMany(tableName string, records []domain.Record) error {
 	for _, record := range records {
-		recordsPO := model.Record{}.FromDomain(record)
-
-		err := r.gorm.Table(tableName).Create(&recordsPO).Error
-		if err != nil {
-			var mysqlErr *mysql.MySQLError
-			// if duplicate key, not error
-			if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
-				continue
-			}
-
-			// if table is not created
-			if errors.As(err, &mysqlErr) && mysqlErr.Number == 1146 {
-				if createErr := r.createTable(tableName); createErr != nil {
-					return createErr
-				}
-				err = r.gorm.Table(tableName).Create(recordsPO).Error
-			}
-
+		if err := r.Create(tableName, record); err != nil {
 			return err
 		}
 	}
+
 	return nil
+}
+
+func (r *RecordRepository) List(tableName string, start, end time.Time) ([]domain.Record, error) {
+	var recordsPO []model.Record
+	if err := r.gorm.Table(tableName).
+		Where("datetime BETWEEN ? AND ?", start, end).
+		Find(&recordsPO).Error; err != nil {
+		return nil, err
+	}
+
+	records := make([]domain.Record, 0, len(recordsPO))
+	for _, recordPO := range recordsPO {
+		records = append(records, recordPO.ToDomain())
+	}
+
+	return records, nil
 }
 
 func (r *RecordRepository) createTable(tableName string) error {
@@ -60,13 +85,13 @@ func (r *RecordRepository) createTable(tableName string) error {
 	return nil
 }
 
-func (r *RecordRepository) ListMap(start, end time.Time, tableName string, physicalQuantities []domain.PhysicalQuantity) ([]map[string]string, error) {
+func (r *RecordRepository) ListMap(start, end time.Time, physicalQuantities []domain.PhysicalQuantity) ([]map[string]string, error) {
 	if len(physicalQuantities) == 0 {
 		return nil, errors.New("empty physical quantities")
 	}
 
 	// 建立時間序列
-	timeSeriesSubQuery := r.createTimeQuery(tableName, physicalQuantities[0], start, end)
+	timeSeriesSubQuery := r.createTimeQuery(physicalQuantities[0].StationUUID, physicalQuantities[0], start, end)
 
 	// 建立查詢
 	query := r.gorm.Table("(?) as time_series", timeSeriesSubQuery)
@@ -78,7 +103,7 @@ func (r *RecordRepository) ListMap(start, end time.Time, tableName string, physi
 		selectStr += r.createPhysicalQuantitySelectString(pq)
 
 		// 建立物理量子查詢
-		pqSubQuery := r.createPhysicalQuantitySubQuery(tableName, pq, start, end)
+		pqSubQuery := r.createPhysicalQuantitySubQuery(pq.StationUUID, pq, start, end)
 
 		// JOIN子查詢
 		query = query.Joins("LEFT JOIN (?) as "+r.physicalQuantityTempTable(pq)+" ON time_series.times = "+r.physicalQuantityTempTable(pq)+".pqtime", pqSubQuery)
@@ -92,27 +117,6 @@ func (r *RecordRepository) ListMap(start, end time.Time, tableName string, physi
 
 	_, rowsMap, mapErr := r.dumpRowsToMapArray(physicalQuantities, rows)
 	return rowsMap, mapErr
-}
-
-func (r *RecordRepository) List(start, end time.Time, tableName string, physicalQuantity domain.PhysicalQuantity) ([]domain.Record, error) {
-	var recordsPOs []model.Record
-
-	err := r.gorm.
-		Table(tableName).
-		Where(physicalQuantity).
-		Where("datetime BETWEEN ? AND ?", start, end).
-		Order("datetime").
-		Find(&recordsPOs).Error
-	if err != nil {
-		return nil, err
-	}
-
-	var records []domain.Record
-	for _, recordPO := range recordsPOs {
-		records = append(records, recordPO.ToDomain())
-	}
-
-	return records, nil
 }
 
 func (r *RecordRepository) Last(tableName string, physicalQuantity domain.PhysicalQuantity) (domain.Record, error) {
@@ -175,14 +179,6 @@ func (RecordRepository) dumpRowsToMapArray(physicalQuantities []domain.PhysicalQ
 		}
 
 		tempMap := make(map[string]string)
-
-		// for i, v := range cols {
-		// 	if i == 0 {
-		// 		tempMap[v] = writeCols[i]
-		// 		continue
-		// 	}
-		// 	tempMap[physicalQuantities[i-1].FullName] = writeCols[i]
-		// }
 
 		// 第一格必為時間
 		tempMap[cols[0]] = writeCols[0]

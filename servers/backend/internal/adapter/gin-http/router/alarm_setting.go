@@ -22,5 +22,10 @@ func (as *AlarmSettingRouter) Setup(router *gin.RouterGroup) {
 		alarmSettingGroup.PATCH("/Expression", as.alarmSettingController.UpdateExpression)
 		alarmSettingGroup.GET("", as.alarmSettingController.ListByDeviceUUID)
 		alarmSettingGroup.GET("/Station", as.alarmSettingController.ListByStationUUID)
+		alarmSettingGroup.POST("", as.alarmSettingController.PostCreate)
+		alarmSettingGroup.PUT("", as.alarmSettingController.PutUpdate)
+		alarmSettingGroup.DELETE("/:uuid", as.alarmSettingController.Delete)
+
+		alarmSettingGroup.POST("/Tool/Expression/Test", as.alarmSettingController.TestExpression)
 	}
 }

@@ -11,35 +11,29 @@ import (
 
 type CatchInputUsecase struct {
 	physicalQuantity            irepository.IPhysicalQuantityRepository
-	physicalQuantityEvaluate    irepository.IPhysicalQuantityEvaluateRepository
 	physicalQuantityCatchDetail irepository.IPhysicalQuantityCatchDetailRepository
 	device                      irepository.IDeviceRepository
 	station                     irepository.IStationRepository
 	record                      irepository.IRecordRepository
 
-	alarmUsecase                    AlarmUsecase
-	physicalQuantityEvaluateUsecase PhysicalQuantityEvaluateUsecase
+	alarmUsecase AlarmUsecase
 }
 
 func NewCatchInputUsecase(
 	physicalQuantity irepository.IPhysicalQuantityRepository,
-	physicalQuantityEvaluate irepository.IPhysicalQuantityEvaluateRepository,
 	physicalQuantityCatchDetail irepository.IPhysicalQuantityCatchDetailRepository,
 	device irepository.IDeviceRepository,
 	station irepository.IStationRepository,
 	record irepository.IRecordRepository,
 	alarmUsecase AlarmUsecase,
-	physicalQuantityEvaluateUsecase PhysicalQuantityEvaluateUsecase,
 ) *CatchInputUsecase {
 	return &CatchInputUsecase{
-		physicalQuantity:                physicalQuantity,
-		physicalQuantityEvaluate:        physicalQuantityEvaluate,
-		physicalQuantityCatchDetail:     physicalQuantityCatchDetail,
-		device:                          device,
-		station:                         station,
-		record:                          record,
-		alarmUsecase:                    alarmUsecase,
-		physicalQuantityEvaluateUsecase: physicalQuantityEvaluateUsecase,
+		physicalQuantity:            physicalQuantity,
+		physicalQuantityCatchDetail: physicalQuantityCatchDetail,
+		device:                      device,
+		station:                     station,
+		record:                      record,
+		alarmUsecase:                alarmUsecase,
 	}
 }
 
@@ -57,18 +51,6 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 	if len(inputs) == 0 {
 		return errors.New("inputs is empty")
 	}
-
-	// 取得裝置
-	device, deviceErr := ciu.device.FindByUUID(deviceUUID)
-	if deviceErr != nil {
-		return deviceErr
-	}
-
-	// // 取得站點
-	// station, stationErr := ciu.station.FindByUUID(device.StationUUID)
-	// if stationErr != nil {
-	// 	return stationErr
-	// }
 
 	pqcd, listErr := ciu.physicalQuantityCatchDetail.List(
 		domain.PhysicalQuantity{
@@ -90,8 +72,6 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 	if updateErr := ciu.device.UpdateLastTime(updatedDevice); updateErr != nil {
 		return updateErr
 	}
-
-	var insertRecords []domain.Record
 
 	for _, input := range inputs {
 		// 檢查UUID
@@ -145,78 +125,19 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 			}
 		}
 
-		// 插入資料
-		insertRecords = append(insertRecords, domain.Record{
-			DeviceUUID:           physicalQuantityCatchDetail.DeviceUUID,
-			PhysicalQuantityUUID: physicalQuantityCatchDetail.UUID,
-			Datetime:             input.Datetime,
-			Value:                physicalQuantityCatchDetail.Value,
-			Data:                 physicalQuantityCatchDetail.Data,
-			Status:               physicalQuantityCatchDetail.StatusCode,
-		})
-
-		//  換算物理量
-		insertRecordsEvaluate, evaluateErr := ciu.catchEvaluate(physicalQuantityCatchDetail.PhysicalQuantityEvaluates, deviceUUID, input.Datetime, physicalQuantityCatchDetail.Value)
-		if evaluateErr != nil {
-			return evaluateErr
-		}
-
-		if len(insertRecordsEvaluate) > 0 {
-			insertRecords = append(insertRecords, insertRecordsEvaluate...)
-		}
-	}
-
-	if len(insertRecords) > 0 {
-		if createErr := ciu.record.CreateMany(device.StationUUID, insertRecords); createErr != nil {
+		if createErr := ciu.record.Create(physicalQuantityCatchDetail.StationUUID,
+			domain.Record{
+				DeviceUUID:           physicalQuantityCatchDetail.DeviceUUID,
+				PhysicalQuantityUUID: physicalQuantityCatchDetail.UUID,
+				Datetime:             input.Datetime,
+				Value:                physicalQuantityCatchDetail.Value,
+				Data:                 physicalQuantityCatchDetail.Data,
+				Status:               physicalQuantityCatchDetail.StatusCode,
+			}); createErr != nil {
 			return createErr
 		}
 	}
-
 	return nil
-}
-
-func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, deviceUUID string, inputTime time.Time, value float64) ([]domain.Record, error) {
-	if len(pqes) == 0 {
-		return nil, nil
-	}
-
-	var insertRecords []domain.Record
-	for _, pqe := range pqes {
-		// 檢查UpdateTime
-		if pqe.UpdateTime == nil {
-			pqe.UpdateTime = &time.Time{}
-			*pqe.UpdateTime = time.Date(2000, 1, 1, 0, 0, 0, 0, time.Local)
-		}
-
-		// 計算公式
-		insertValue, err := ciu.physicalQuantityEvaluateUsecase.Evaluate(pqe, value)
-		if err != nil {
-			return nil, err
-		}
-
-		pqe.Value = insertValue
-		pqe.Data = value
-
-		// 如果是新資料，則更新資料
-		if inputTime.After(*pqe.UpdateTime) {
-			*pqe.UpdateTime = inputTime
-			if updateErr := ciu.physicalQuantityEvaluate.UpdateLast(pqe); updateErr != nil {
-				return nil, updateErr
-			}
-		}
-
-		// 插入資料
-		insertRecords = append(insertRecords, domain.Record{
-			DeviceUUID:           deviceUUID,
-			PhysicalQuantityUUID: pqe.UUID,
-			Datetime:             inputTime,
-			Value:                insertValue,
-			Data:                 value,
-			Status:               "10",
-		})
-	}
-
-	return insertRecords, nil
 }
 
 func mappingStruct(pqcds []domain.PhysicalQuantityCatchDetail) map[string]domain.PhysicalQuantityCatchDetail {

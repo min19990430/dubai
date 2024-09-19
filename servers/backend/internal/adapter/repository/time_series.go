@@ -9,7 +9,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"auto-monitoring/internal/adapter/gorm/model"
 	"auto-monitoring/internal/application/convert"
 	"auto-monitoring/internal/domain"
 	"auto-monitoring/internal/domain/irepository"
@@ -29,6 +28,8 @@ func (t *TimeSeriesRepository) Aggregate(start time.Time, end time.Time, interva
 
 	// 建立查詢
 	query := t.gorm.Table("(?) as time_series", timeSeriesSubQuery)
+
+	// FIXME: 這裡的SELECT字串需要修改
 	// selectStr := "FROM_UNIXTIME(time_series.times) as times"
 	selectStr := "DATE_FORMAT(CONVERT_TZ(FROM_UNIXTIME(time_series.times), '+08:00', '+00:00'), '%Y-%m-%dT%TZ') as times"
 	for _, pq := range physicalQuantities {
@@ -115,15 +116,8 @@ func (t *TimeSeriesRepository) createPhysicalQuantitySelectString(pq domain.Phys
 func (t *TimeSeriesRepository) createPhysicalQuantitySubQuery(pq domain.PhysicalQuantity, startTime, endTime time.Time, interval time.Duration) *gorm.DB {
 	intervalSec := int(interval.Seconds())
 
-	// ! 出現 device 操作
-	var device model.Device
-	findErr := t.gorm.Table("device").Where("uuid = ?", pq.DeviceUUID).First(&device).Error
-	if findErr != nil {
-		return nil
-	}
-
 	pqSubQuery := t.gorm.
-		Table(device.StationUUID).
+		Table(pq.StationUUID).
 		Where("datetime between ? and ?", startTime, endTime).
 		Where("physical_quantity_uuid = ?", pq.UUID).
 		Group("pqtime")

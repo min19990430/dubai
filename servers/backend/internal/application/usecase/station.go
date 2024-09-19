@@ -22,3 +22,15 @@ func (su *StationUsecase) FindByUUID(uuid string) (domain.Station, error) {
 func (su *StationUsecase) List(station domain.Station) ([]domain.Station, error) {
 	return su.station.List(station)
 }
+
+func (su *StationUsecase) Create(station domain.Station) error {
+	return su.station.Create(station)
+}
+
+func (su *StationUsecase) Update(station domain.Station) error {
+	return su.station.Update(station)
+}
+
+func (su *StationUsecase) Delete(key string) error {
+	return su.station.Delete(domain.Station{UUID: key})
+}
