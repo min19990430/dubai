@@ -143,7 +143,7 @@ func (r *RecordRepository) createTimeQuery(tableName string, physicalQuantity do
 }
 
 func (r *RecordRepository) createPhysicalQuantitySelectString(pq domain.PhysicalQuantity) string {
-	return ", " + r.physicalQuantityTempTable(pq) + ".value as " + pq.Name + ", " + r.physicalQuantityTempTable(pq) + ".status as " + pq.Name + "_status"
+	return ", IFNULL(" + r.physicalQuantityTempTable(pq) + ".value,0) as " + pq.Name + ", IFNULL(" + r.physicalQuantityTempTable(pq) + ".status,30) as " + pq.Name + "_status"
 }
 
 func (r *RecordRepository) createPhysicalQuantitySubQuery(tableName string, pq domain.PhysicalQuantity, startTime, endTime time.Time) *gorm.DB {
