@@ -69,6 +69,36 @@ func (ru *RecordUsecase) ListMapByDevice(start, end time.Time, deviceUUID string
 	return recordsMap, nil
 }
 
+func (ru *RecordUsecase) ListArrayByStation(start, end time.Time, stationUUID string, timeZone string) (domain.TimeSeries, error) {
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID, IsEnable: true, Source: "sensor"})
+	if pqErr != nil {
+		return domain.TimeSeries{}, pqErr
+	}
+
+	// 解析包含時區信息的時間字符串
+	t, timeErr := time.Parse(time.RFC3339, "2006-01-02T15:04:05"+timeZone)
+	if timeErr != nil {
+		return domain.TimeSeries{}, timeErr
+	}
+
+	recordsArray, listErr := ru.record.ListArray(start, end, physicalQuantities)
+	if listErr != nil {
+		return domain.TimeSeries{}, listErr
+	}
+
+	// 轉換時間
+	for i, record := range recordsArray.Data {
+		tmpTime, parseErr := time.Parse(time.RFC3339, record[0])
+		if parseErr != nil {
+			return domain.TimeSeries{}, parseErr
+		}
+
+		recordsArray.Data[i][0] = tmpTime.In(t.Location()).Format(time.RFC3339)
+	}
+
+	return recordsArray, nil
+}
+
 func (ru *RecordUsecase) ListMapByStation(start, end time.Time, stationUUID string, timeZone string) ([]map[string]string, error) {
 	station, sErr := ru.station.FindByUUID(stationUUID)
 	if sErr != nil {

@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 
 	"auto-monitoring/internal/adapter/gorm/model"
+	"auto-monitoring/internal/application/convert"
 	"auto-monitoring/internal/domain"
 	"auto-monitoring/internal/domain/irepository"
 )
@@ -85,6 +86,39 @@ func (r *RecordRepository) createTable(tableName string) error {
 	return nil
 }
 
+func (r *RecordRepository) ListArray(start, end time.Time, physicalQuantities []domain.PhysicalQuantity) (domain.TimeSeries, error) {
+	if len(physicalQuantities) == 0 {
+		return domain.TimeSeries{}, errors.New("empty physical quantities")
+	}
+
+	// 建立時間序列
+	timeSeriesSubQuery := r.createTimeQuery(physicalQuantities[0].StationUUID, physicalQuantities[0], start, end)
+
+	// 建立查詢
+	query := r.gorm.Table("(?) as time_series", timeSeriesSubQuery)
+
+	selectStr := "time_series.times as times"
+
+	for _, pq := range physicalQuantities {
+		// 建立SELECT字串
+		selectStr += r.createPhysicalQuantitySelectString(pq)
+
+		// 建立物理量子查詢
+		pqSubQuery := r.createPhysicalQuantitySubQuery(pq.StationUUID, pq, start, end)
+
+		// JOIN子查詢
+		query = query.Joins("LEFT JOIN (?) as "+r.physicalQuantityTempTable(pq)+" ON time_series.times = "+r.physicalQuantityTempTable(pq)+".pqtime", pqSubQuery)
+	}
+
+	// 執行查詢
+	rows, rowsErr := query.Select(selectStr).Order("times").Rows()
+	if rowsErr != nil {
+		return domain.TimeSeries{}, rowsErr
+	}
+
+	return r.dumpRowsToStringArray(physicalQuantities, rows)
+}
+
 func (r *RecordRepository) ListMap(start, end time.Time, physicalQuantities []domain.PhysicalQuantity) ([]map[string]string, error) {
 	if len(physicalQuantities) == 0 {
 		return nil, errors.New("empty physical quantities")
@@ -156,6 +190,37 @@ func (r *RecordRepository) createPhysicalQuantitySubQuery(tableName string, pq d
 
 func (RecordRepository) physicalQuantityTempTable(pq domain.PhysicalQuantity) string {
 	return pq.Name + "_" + strings.ReplaceAll(pq.DeviceUUID, "-", "_")
+}
+
+func (RecordRepository) dumpRowsToStringArray(physicalQuantities []domain.PhysicalQuantity, rows *sql.Rows) (domain.TimeSeries, error) {
+	var recordTable domain.TimeSeries
+
+	cols, err := rows.Columns()
+	if err != nil {
+		return domain.TimeSeries{}, err
+	}
+
+	recordTable.Columns = append(recordTable.Columns, convert.TimeSeriesColumn{}.CreateTimeColumn())
+	for _, pq := range physicalQuantities {
+		recordTable.Columns = append(recordTable.Columns, convert.TimeSeriesColumn{}.FromPhysicalQuantity(pq))
+	}
+
+	readCols := make([]interface{}, len(cols))
+	writeCols := make([]string, len(cols))
+	for i := range writeCols {
+		readCols[i] = &writeCols[i]
+	}
+
+	for rows.Next() {
+		err = rows.Scan(readCols...)
+		if err != nil {
+			return domain.TimeSeries{}, err
+		}
+		copiedSlice := make([]string, len(cols))
+		copy(copiedSlice, writeCols)
+		recordTable.Data = append(recordTable.Data, copiedSlice)
+	}
+	return recordTable, nil
 }
 
 func (RecordRepository) dumpRowsToMapArray(physicalQuantities []domain.PhysicalQuantity, rows *sql.Rows) ([]string, []map[string]string, error) {

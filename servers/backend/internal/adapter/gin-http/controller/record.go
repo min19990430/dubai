@@ -118,6 +118,32 @@ type RecordListStationRequest struct {
 	TimeZone    string    `json:"time_zone" binding:"required,timezone"`
 }
 
+func (rc *RecordController) PostListStation(c *gin.Context) {
+	var request RecordListStationRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		rc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	if request.StartTime.After(request.EndTime) {
+		rc.response.ValidatorFail(c, "The start time should not be greater than the end time")
+		return
+	}
+
+	if diff := request.EndTime.Sub(request.StartTime); diff > 90*24*time.Hour {
+		rc.response.ValidatorFail(c, "The time interval should not exceed 90 days")
+		return
+	}
+
+	records, err := rc.recordUsecase.ListArrayByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone)
+	if err != nil {
+		rc.response.FailWithError(c, queryFail, err)
+		return
+	}
+
+	rc.response.SuccessWithData(c, "success", records)
+}
+
 func (rc *RecordController) PostListStationJSON(c *gin.Context) {
 	var request RecordListStationRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
