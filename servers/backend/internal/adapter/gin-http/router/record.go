@@ -25,8 +25,9 @@ func (rr *RecordRouter) Setup(router *gin.RouterGroup) {
 	{
 		recordGroup.POST("/Last", rr.recordController.LastRecord)
 		recordGroup.POST("", rr.recordController.PostList)
-		recordGroup.POST("/Device/Sensor/JSON", rr.recordController.PostListDeviceJSON)
-		recordGroup.POST("/Station/Sensor", rr.recordController.PostListStation)
-		recordGroup.POST("/Station/Sensor/JSON", rr.logger.Middleware, rr.recordController.PostListStationJSON)
+		recordGroup.POST("/Device", rr.recordController.PostListDevice)
+		recordGroup.POST("/Device/JSON", rr.recordController.PostListDeviceJSON)
+		recordGroup.POST("/Station", rr.recordController.PostListStation)
+		recordGroup.POST("/Station/JSON", rr.logger.Middleware, rr.recordController.PostListStationJSON)
 	}
 }

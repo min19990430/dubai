@@ -49,6 +49,7 @@ type RecordListRequest struct {
 	StartTime  time.Time `json:"start_time" binding:"required"`
 	EndTime    time.Time `json:"end_time" binding:"required"`
 	TimeZone   string    `json:"time_zone" binding:"required,timezone"`
+	Source     string    `json:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
 }
 
 func (rc *RecordController) PostList(c *gin.Context) {
@@ -68,7 +69,7 @@ func (rc *RecordController) PostList(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.recordUsecase.List(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
+	records, err := rc.recordUsecase.List(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone, request.Source)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return
@@ -82,6 +83,34 @@ type RecordListDeviceRequest struct {
 	StartTime  time.Time `json:"start_time" binding:"required"`
 	EndTime    time.Time `json:"end_time" binding:"required"`
 	TimeZone   string    `json:"time_zone" binding:"required,timezone"`
+	Source     string    `json:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
+}
+
+func (rc *RecordController) PostListDevice(c *gin.Context) {
+	var request RecordListDeviceRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		rc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	if request.StartTime.After(request.EndTime) {
+		rc.response.ValidatorFail(c, "The start time should not be greater than the end time")
+		return
+	}
+
+	if diff := request.EndTime.Sub(request.StartTime); diff > 90*24*time.Hour {
+		rc.response.ValidatorFail(c, "The time interval should not exceed 90 days")
+		return
+	}
+
+	records, err := rc.recordUsecase.ListArrayByDevice(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone, request.Source)
+	if err != nil {
+		log.Println(err)
+		rc.response.FailWithError(c, queryFail, err)
+		return
+	}
+
+	rc.response.SuccessWithData(c, "success", records)
 }
 
 func (rc *RecordController) PostListDeviceJSON(c *gin.Context) {
@@ -101,7 +130,7 @@ func (rc *RecordController) PostListDeviceJSON(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.recordUsecase.ListMapByDevice(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone)
+	records, err := rc.recordUsecase.ListMapByDevice(request.StartTime, request.EndTime, request.DeviceUUID, request.TimeZone, request.Source)
 	if err != nil {
 		log.Println(err)
 		rc.response.FailWithError(c, queryFail, err)
@@ -116,6 +145,7 @@ type RecordListStationRequest struct {
 	StartTime   time.Time `json:"start_time" binding:"required"`
 	EndTime     time.Time `json:"end_time" binding:"required"`
 	TimeZone    string    `json:"time_zone" binding:"required,timezone"`
+	Source      string    `json:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
 }
 
 func (rc *RecordController) PostListStation(c *gin.Context) {
@@ -135,7 +165,7 @@ func (rc *RecordController) PostListStation(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.recordUsecase.ListArrayByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone)
+	records, err := rc.recordUsecase.ListArrayByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone, request.Source)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return
@@ -161,7 +191,7 @@ func (rc *RecordController) PostListStationJSON(c *gin.Context) {
 		return
 	}
 
-	records, err := rc.recordUsecase.ListMapByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone)
+	records, err := rc.recordUsecase.ListMapByStation(request.StartTime, request.EndTime, request.StationUUID, request.TimeZone, request.Source)
 	if err != nil {
 		rc.response.FailWithError(c, queryFail, err)
 		return

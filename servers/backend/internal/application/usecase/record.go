@@ -10,6 +10,39 @@ import (
 	"auto-monitoring/internal/domain/irepository"
 )
 
+type Source int
+
+const (
+	Sensor Source = iota
+	Device
+	Debug
+)
+
+var sourceMap = map[Source]string{
+	Sensor: "sensor",
+	Device: "device",
+	Debug:  "debug",
+}
+
+func (s Source) String() string {
+	return sourceMap[s]
+}
+
+func (s Source) IsValid() bool {
+	_, ok := sourceMap[s]
+	return ok
+}
+
+func SourceFromString(s string) (Source, error) {
+	for k, v := range sourceMap {
+		if s == v {
+			return k, nil
+		}
+	}
+
+	return -1, fmt.Errorf("invalid source: %s", s)
+}
+
 type RecordUsecase struct {
 	record           irepository.IRecordRepository
 	device           irepository.IDeviceRepository
@@ -31,13 +64,53 @@ func NewRecordUsecase(
 	}
 }
 
-func (ru *RecordUsecase) ListMapByDevice(start, end time.Time, deviceUUID string, timeZone string) ([]map[string]string, error) {
+func (ru *RecordUsecase) ListArrayByDevice(start, end time.Time, deviceUUID string, timeZone string, sourceStr string) (domain.TimeSeries, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return domain.TimeSeries{}, err
+	}
+
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{DeviceUUID: deviceUUID, IsEnable: true, Source: source.String()})
+	if pqErr != nil {
+		return domain.TimeSeries{}, pqErr
+	}
+
+	// 解析包含時區信息的時間字符串
+	t, timeErr := time.Parse(time.RFC3339, "2006-01-02T15:04:05"+timeZone)
+	if timeErr != nil {
+		return domain.TimeSeries{}, timeErr
+	}
+
+	recordsArray, listErr := ru.record.ListArray(start, end, physicalQuantities)
+	if listErr != nil {
+		return domain.TimeSeries{}, listErr
+	}
+
+	// 轉換時間
+	for i, record := range recordsArray.Data {
+		tmpTime, parseErr := time.Parse(time.RFC3339, record[0])
+		if parseErr != nil {
+			return domain.TimeSeries{}, parseErr
+		}
+
+		recordsArray.Data[i][0] = tmpTime.In(t.Location()).Format(time.RFC3339)
+	}
+
+	return recordsArray, nil
+}
+
+func (ru *RecordUsecase) ListMapByDevice(start, end time.Time, deviceUUID string, timeZone string, sourceStr string) ([]map[string]string, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return nil, err
+	}
+
 	device, dErr := ru.device.FindByUUID(deviceUUID)
 	if dErr != nil {
 		return nil, dErr
 	}
 
-	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{DeviceUUID: deviceUUID, IsEnable: true, Source: "sensor"})
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{DeviceUUID: deviceUUID, IsEnable: true, Source: source.String()})
 	if pqErr != nil {
 		return nil, pqErr
 	}
@@ -69,8 +142,13 @@ func (ru *RecordUsecase) ListMapByDevice(start, end time.Time, deviceUUID string
 	return recordsMap, nil
 }
 
-func (ru *RecordUsecase) ListArrayByStation(start, end time.Time, stationUUID string, timeZone string) (domain.TimeSeries, error) {
-	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID, IsEnable: true, Source: "sensor"})
+func (ru *RecordUsecase) ListArrayByStation(start, end time.Time, stationUUID string, timeZone string, sourceStr string) (domain.TimeSeries, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return domain.TimeSeries{}, err
+	}
+
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID, IsEnable: true, Source: source.String()})
 	if pqErr != nil {
 		return domain.TimeSeries{}, pqErr
 	}
@@ -99,13 +177,18 @@ func (ru *RecordUsecase) ListArrayByStation(start, end time.Time, stationUUID st
 	return recordsArray, nil
 }
 
-func (ru *RecordUsecase) ListMapByStation(start, end time.Time, stationUUID string, timeZone string) ([]map[string]string, error) {
+func (ru *RecordUsecase) ListMapByStation(start, end time.Time, stationUUID string, timeZone string, sourceStr string) ([]map[string]string, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return nil, err
+	}
+
 	station, sErr := ru.station.FindByUUID(stationUUID)
 	if sErr != nil {
 		return nil, sErr
 	}
 
-	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID, IsEnable: true, Source: "sensor"})
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{StationUUID: stationUUID, IsEnable: true, Source: source.String()})
 	if pqErr != nil {
 		return nil, pqErr
 	}
@@ -139,8 +222,13 @@ func (ru *RecordUsecase) ListMapByStation(start, end time.Time, stationUUID stri
 	return recordsMap, nil
 }
 
-func (ru *RecordUsecase) List(start, end time.Time, deviceUUID string, timeZone string) ([]domain.Record, error) {
-	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{DeviceUUID: deviceUUID, IsEnable: true, Source: "sensor"})
+func (ru *RecordUsecase) List(start, end time.Time, deviceUUID string, timeZone string, sourceStr string) ([]domain.Record, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return nil, err
+	}
+
+	physicalQuantities, pqErr := ru.physicalQuantity.List(domain.PhysicalQuantity{DeviceUUID: deviceUUID, IsEnable: true, Source: source.String()})
 	if pqErr != nil {
 		return nil, pqErr
 	}
