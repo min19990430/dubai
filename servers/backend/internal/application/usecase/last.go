@@ -17,10 +17,20 @@ func NewLastUsecase(
 	}
 }
 
-func (lu *LastUsecase) GetStationLast() ([]domain.StationLast, error) {
-	return lu.last.GetStationLast()
+func (lu *LastUsecase) GetStationLast(sourceStr string) ([]domain.StationLast, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return nil, err
+	}
+
+	return lu.last.GetStationLast(source.String())
 }
 
-func (lu *LastUsecase) GetDeviceLast() ([]domain.DeviceLast, error) {
-	return lu.last.GetDeviceLast()
+func (lu *LastUsecase) GetDeviceLast(sourceStr string) ([]domain.DeviceLast, error) {
+	source, err := SourceFromString(sourceStr)
+	if err != nil {
+		return nil, err
+	}
+
+	return lu.last.GetDeviceLast(source.String())
 }

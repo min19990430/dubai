@@ -27,8 +27,17 @@ func NewLastController(
 	}
 }
 
+type LastStationRequest struct {
+	Source string `form:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
+}
+
 func (lc *LastController) GetStationLast(c *gin.Context) {
-	lasts, err := lc.last.GetStationLast()
+	var request LastStationRequest
+	if err := c.ShouldBind(&request); err != nil {
+		request.Source = "sensor"
+	}
+
+	lasts, err := lc.last.GetStationLast(request.Source)
 	if err != nil {
 		lc.response.FailWithError(c, queryFail, err)
 		return
@@ -50,8 +59,17 @@ func (lc *LastController) GetStationLast(c *gin.Context) {
 		})
 }
 
+type LastDeviceRequest struct {
+	Source string `form:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
+}
+
 func (lc *LastController) GetDeviceLast(c *gin.Context) {
-	lasts, err := lc.last.GetDeviceLast()
+	var request LastDeviceRequest
+	if err := c.ShouldBind(&request); err != nil {
+		request.Source = "sensor"
+	}
+
+	lasts, err := lc.last.GetDeviceLast(request.Source)
 	if err != nil {
 		lc.response.FailWithError(c, queryFail, err)
 		return

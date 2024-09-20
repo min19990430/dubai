@@ -3,6 +3,6 @@ package irepository
 import "auto-monitoring/internal/domain"
 
 type ILastRepository interface {
-	GetStationLast() ([]domain.StationLast, error)
-	GetDeviceLast() ([]domain.DeviceLast, error)
+	GetStationLast(source string) ([]domain.StationLast, error)
+	GetDeviceLast(source string) ([]domain.DeviceLast, error)
 }

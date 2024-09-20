@@ -55,3 +55,20 @@
 {"level":"info","time":"2024-09-20T14:03:19.743+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"info","time":"2024-09-20T14:21:02.227+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"info","time":"2024-09-20T15:39:41.333+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-20T16:06:28.696+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-20T16:06:30.298+0800","file":"controller/last.go:37","msg":"Key: 'LastStationRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"info","time":"2024-09-20T16:07:23.055+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-20T16:07:24.558+0800","file":"controller/last.go:37","msg":"Key: 'LastStationRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"error","time":"2024-09-20T16:07:27.324+0800","file":"controller/last.go:70","msg":"Key: 'LastDeviceRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"info","time":"2024-09-20T16:07:58.635+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-20T16:08:01.139+0800","file":"controller/last.go:70","msg":"Key: 'LastDeviceRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"error","time":"2024-09-20T16:08:04.497+0800","file":"controller/last.go:37","msg":"Key: 'LastStationRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"info","time":"2024-09-20T16:09:50.596+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-20T16:12:24.970+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-20T16:12:58.414+0800","file":"controller/last.go:70","msg":"Key: 'LastDeviceRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"info","time":"2024-09-20T16:14:26.817+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"error","time":"2024-09-20T16:14:29.665+0800","file":"controller/last.go:70","msg":"Key: 'LastDeviceRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"error","time":"2024-09-20T16:14:32.470+0800","file":"controller/last.go:37","msg":"Key: 'LastStationRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"error","time":"2024-09-20T16:14:49.515+0800","file":"controller/last.go:70","msg":"Key: 'LastDeviceRequest.Source' Error:Field validation for 'Source' failed on the 'required' tag","ApplicationName":"杜拜","message":"param error"}
+{"level":"info","time":"2024-09-20T16:16:07.851+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-20T16:22:03.287+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}

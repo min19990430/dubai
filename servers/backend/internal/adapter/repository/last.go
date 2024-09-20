@@ -18,11 +18,11 @@ func NewLastRepository(gorm *gorm.DB) irepository.ILastRepository {
 	}
 }
 
-func (l *LastRepository) GetStationLast() ([]domain.StationLast, error) {
+func (l *LastRepository) GetStationLast(source string) ([]domain.StationLast, error) {
 	var lastPO []model.StationLast
 	err := l.gorm.
 		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
-			return db.Where("is_enable = true").Order("physical_quantity.priority")
+			return db.Where("is_enable = true").Where("source = ?", source).Order("physical_quantity.priority")
 		}).
 		Order("priority").
 		Find(&lastPO).Error
@@ -44,11 +44,11 @@ func (l *LastRepository) GetStationLast() ([]domain.StationLast, error) {
 	return last, nil
 }
 
-func (l *LastRepository) GetDeviceLast() ([]domain.DeviceLast, error) {
+func (l *LastRepository) GetDeviceLast(source string) ([]domain.DeviceLast, error) {
 	var lastPO []model.DeviceLast
 	err := l.gorm.
 		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
-			return db.Where("is_enable = true").Order("physical_quantity.priority")
+			return db.Where("is_enable = true").Where("source = ?", source).Order("physical_quantity.priority")
 		}).
 		Order("priority").
 		Find(&lastPO).Error
