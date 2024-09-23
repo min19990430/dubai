@@ -31,7 +31,7 @@ func (sc *StationController) GetList(c *gin.Context) {
 }
 
 type StationRequest struct {
-	UUID        string  `json:"uuid" binding:"required,uuid"`
+	UUID        string  `json:"uuid" binding:"required,uuid4"`
 	ID          string  `json:"id" binding:"required"`
 	Name        string  `json:"name" binding:"required"`
 	Priority    int     `json:"priority" `

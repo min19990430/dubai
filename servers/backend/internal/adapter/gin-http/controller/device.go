@@ -31,7 +31,7 @@ func (dc *DeviceController) GetList(c *gin.Context) {
 }
 
 type DeviceRequest struct {
-	UUID        string  `json:"uuid" binding:"required,uuid"`
+	UUID        string  `json:"uuid" binding:"required,uuid4"`
 	ID          string  `json:"id" binding:"required"`
 	Name        string  `json:"name" binding:"required"`
 	IsEnable    bool    `json:"is_enable" `

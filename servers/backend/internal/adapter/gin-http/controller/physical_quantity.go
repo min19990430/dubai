@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 
 	"auto-monitoring/internal/adapter/gin-http/controller/response"
@@ -62,6 +64,8 @@ type PhysicalQuantityRequest struct {
 	IsEnable   bool   `json:"is_enable"`
 	Priority   int    `json:"priority"`
 
+	Source string `json:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
+
 	PhysicalQuantityDataType   string `json:"physical_quantity_data_type"`
 	AggregateCalculationMethod string `json:"aggregate_calculation_method"`
 
@@ -90,6 +94,7 @@ func (pqc *PhysicalQuantityController) PostCreate(c *gin.Context) {
 		StatusCode:                 request.StatusCode,
 		IsEnable:                   request.IsEnable,
 		Priority:                   request.Priority,
+		Source:                     request.Source,
 		PhysicalQuantityDataType:   request.PhysicalQuantityDataType,
 		AggregateCalculationMethod: request.AggregateCalculationMethod,
 		CalibrationEnable:          request.CalibrationEnable,
@@ -109,6 +114,8 @@ func (pqc *PhysicalQuantityController) PutUpdate(c *gin.Context) {
 	var request PhysicalQuantityRequest
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
+		// FIXME: 刪除
+		log.Println(err)
 		pqc.response.ValidatorFail(c, paramError)
 		return
 	}
@@ -123,6 +130,7 @@ func (pqc *PhysicalQuantityController) PutUpdate(c *gin.Context) {
 		StatusCode:                 request.StatusCode,
 		IsEnable:                   request.IsEnable,
 		Priority:                   request.Priority,
+		Source:                     request.Source,
 		PhysicalQuantityDataType:   request.PhysicalQuantityDataType,
 		AggregateCalculationMethod: request.AggregateCalculationMethod,
 		CalibrationEnable:          request.CalibrationEnable,

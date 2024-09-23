@@ -2,10 +2,10 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 
 	"auto-monitoring/internal/adapter/gin-http/controller/response"
 	"auto-monitoring/internal/application/usecase"
+	"auto-monitoring/internal/domain"
 )
 
 type CalibrationController struct {
@@ -30,26 +30,25 @@ func NewCalibrationController(
 	}
 }
 
+type CalibrationListRequest struct {
+	DeviceUUID string `form:"device_uuid" binding:"required,uuid4"`
+	Source     string `form:"source" binding:"required,oneof='sensor' 'device' 'debug'"`
+}
+
 func (cc *CalibrationController) GetList(c *gin.Context) {
-	deviceUUID, hasDeviceID := c.GetQuery("DeviceUUID")
-	if !hasDeviceID {
-		cc.response.ValidatorFail(c, "DeviceUUID is required")
+	var request CalibrationListRequest
+	if err := c.ShouldBind(&request); err != nil {
+		cc.response.ValidatorFail(c, paramError)
 		return
 	}
 
-	validate := validator.New()
-	if validateErr := validate.Var(deviceUUID, "required,uuid"); validateErr != nil {
-		cc.response.ValidatorFail(c, validatorFail)
-		return
-	}
-
-	result, err := cc.calibration.TrialCalculator(deviceUUID)
+	result, err := cc.calibration.TrialCalculator(domain.PhysicalQuantity{IsEnable: true, DeviceUUID: request.DeviceUUID, Source: request.Source})
 	if err != nil {
 		cc.response.FailWithError(c, queryFail, err)
 		return
 	}
 
-	device, err := cc.device.FindByUUID(deviceUUID)
+	device, err := cc.device.FindByUUID(request.DeviceUUID)
 	if err != nil {
 		cc.response.FailWithError(c, queryFail, err)
 		return

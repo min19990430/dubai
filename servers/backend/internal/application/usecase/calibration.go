@@ -16,8 +16,8 @@ func NewCalibrationUsecase(calibration irepository.ICalibrationRepository) *Cali
 	}
 }
 
-func (cu *CalibrationUsecase) TrialCalculator(deviceUUID string) ([]domain.CalibrationDetail, error) {
-	calibrationDetails, err := cu.calibration.FindDetailByDeviceUUID(deviceUUID)
+func (cu *CalibrationUsecase) TrialCalculator(physicalQuantity domain.PhysicalQuantity) ([]domain.CalibrationDetail, error) {
+	calibrationDetails, err := cu.calibration.FindDetailByPhysicalQuantity(physicalQuantity)
 	if err != nil {
 		return nil, err
 	}

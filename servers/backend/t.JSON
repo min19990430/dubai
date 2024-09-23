@@ -1,0 +1,17 @@
+{
+    "uuid": "00000000-e8fc-4953-a9e9-ad735ad007d4",
+    "name": "test",
+    "full_name": "測試值",
+    "si_unit": "none",
+    "device_uuid": "00000000-0000-0000-0000-153869be9584",
+    "station_uuid": "00000000-701a-444b-ac40-d49fb976717d",
+    "status_code": "10",
+    "is_enable": true,
+    "priority": 1,
+    "physical_quantity_data_type": "Decimal1",
+    "aggregate_calculation_method": "avg",
+    "calibration_enable": false,
+    "calibration_value": "2,4,6,8,10",
+    "calibration_parameter": "2,4,6,8,10",
+    "description": ""
+}
