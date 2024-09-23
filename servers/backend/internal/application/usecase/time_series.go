@@ -39,6 +39,7 @@ func (tsu *TimeSeriesUsecase) AggregateDataByStation(start, end time.Time, stati
 	var physicalQuantities []domain.PhysicalQuantity
 	physicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
 		StationUUID: stationUUID,
+		Source:      Sensor.String(),
 		IsEnable:    true,
 	})
 	if pqListErr != nil {
@@ -71,6 +72,7 @@ func (tsu *TimeSeriesUsecase) AggregateMapDataByStation(start, end time.Time, st
 
 	physicalQuantities, pqListErr := tsu.physicalQuantity.List(domain.PhysicalQuantity{
 		StationUUID: stationUUID,
+		Source:      Sensor.String(),
 		IsEnable:    true,
 	})
 	if pqListErr != nil {
