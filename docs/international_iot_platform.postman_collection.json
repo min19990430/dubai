@@ -1,0 +1,2121 @@
+{
+	"info": {
+		"_postman_id": "6e05d839-4bfa-4e63-a30e-398240f9be7b",
+		"name": "international_iot_platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "Account/Self",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Account/Self",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Account",
+										"Self"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Alarm",
+					"item": [
+						{
+							"name": "Collection",
+							"item": [
+								{
+									"name": "Alarm/Collection/device",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n    \"start_time\": \"2024-05-01T00:00:00+08:00\",\r\n    \"end_time\": \"2024-05-30T23:59:59+08:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Collection/Device",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Collection",
+												"Device"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Collection/station",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"station_uuid\": \"e2232881-e996-46be-a0a2-95a2983fdb42\",\r\n    \"start_time\": \"2024-05-01T00:00:00+08:00\",\r\n    \"end_time\": \"2024-05-30T23:59:59+08:00\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Collection/Station",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Collection",
+												"Station"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Setting",
+							"item": [
+								{
+									"name": "tool",
+									"item": [
+										{
+											"name": "Alarm/setting/Tool/Expression/Test",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"expression\": \"X==15\",\r\n    \"value\": 15.000\r\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{host}}/api/v1/Alarm/Setting/Tool/Expression/Test",
+													"host": [
+														"{{host}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"Alarm",
+														"Setting",
+														"Tool",
+														"Expression",
+														"Test"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Alarm/Setting",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting?DeviceUUID=82d7329d-c750-4d97-9f03-c5771e599163",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting"
+											],
+											"query": [
+												{
+													"key": "DeviceUUID",
+													"value": "82d7329d-c750-4d97-9f03-c5771e599163"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Setting/Station",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting/Station?StationUUID=e2232881-e996-46be-a0a2-95a2983fdb42",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting",
+												"Station"
+											],
+											"query": [
+												{
+													"key": "StationUUID",
+													"value": "e2232881-e996-46be-a0a2-95a2983fdb42"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Setting/Expression",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"uuid\": \"4bf608a5-7fc1-479d-b23f-42b8c4c472bf\",\r\n    \"expression\": \"X=<14\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting/Expression",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting",
+												"Expression"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Setting",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"uuid\": \"00000000-e0f7-40d3-b25b-0f51f10bc147\",\r\n    \"physical_quantity_uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"test_low_threshold\",\r\n    \"full_name\": \"Test lower\",\r\n    \"priority\": 0,\r\n    \"is_enable\": true,\r\n    \"is_notify\": true,\r\n    \"is_activated\": false,\r\n    \"boolean_expression\": \"X<=0\",\r\n    \"alarm_content_setting\": \"{{.FullName}} {{.LastOccurValue}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Setting",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"uuid\": \"00000000-e0f7-40d3-b25b-0f51f10bc147\",\r\n    \"physical_quantity_uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"test_low_threshold\",\r\n    \"full_name\": \"Test lower\",\r\n    \"priority\": 10,\r\n    \"is_enable\": false,\r\n    \"is_notify\": false,\r\n    \"is_activated\": false,\r\n    \"boolean_expression\": \"X<=1\",\r\n    \"alarm_content_setting\": \"{{.FullName}} {{.LastOccurValue}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Alarm/Setting",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/v1/Alarm/Setting/:uuid",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"Alarm",
+												"Setting",
+												":uuid"
+											],
+											"variable": [
+												{
+													"key": "uuid",
+													"value": "00000000-e0f7-40d3-b25b-0f51f10bc147"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Alarm",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"start_time\": \"2024-03-22T00:00:00+08:00\",\r\n    \"end_time\": \"2024-03-22T23:59:59+08:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Alarm",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Alarm"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alarm/Device",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"82d7329d-c750-4d97-9f03-c5771e599163\",\r\n    \"start_time\": \"2024-05-01T00:00:00+08:00\",\r\n    \"end_time\": \"2024-05-30T23:59:59+08:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Alarm/Device",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Alarm",
+										"Device"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alarm/Station",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-01T00:00:00+08:00\",\r\n    \"end_time\": \"2024-05-30T23:59:59+08:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Alarm/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Alarm",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alarm/Detail",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"start_time\": \"2024-09-05T00:00:00+08:00\",\r\n    \"end_time\": \"2024-09-17T23:59:59+08:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Alarm/Detail",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Alarm",
+										"Detail"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Calibration",
+					"item": [
+						{
+							"name": "Calibration",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Calibration?device_uuid=dad9090f-b1f6-4cce-9007-29a44df54362&source=sensor",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Calibration"
+									],
+									"query": [
+										{
+											"key": "device_uuid",
+											"value": "dad9090f-b1f6-4cce-9007-29a44df54362"
+										},
+										{
+											"key": "source",
+											"value": "sensor"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Calibration",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"calibration_enable\": true,\r\n    \"calibration_value\": \"1,2,3,4,5\",\r\n    \"calibration_parameter\": \"2,4,6,8,10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Calibration",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Calibration"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Catch",
+					"item": [
+						{
+							"name": "Catch/Signal",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"postman.setNextRequest(\"catch signal\");  "
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let moment = require('moment');\r",
+											"pm.environment.set(\"current_time\", moment().toISOString());\r",
+											"pm.environment.set(\"current_time - 1 day\", moment().subtract(1, 'day').toISOString());\r",
+											"\r",
+											"pm.environment.set(\"random_number\", _.random(40, 40))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n        \"datetime\": \"{{current_time}}\",\r\n        \"di\": \"\",\r\n        \"ai\": [\r\n            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26\r\n        ]\r\n    },\r\n    {\r\n        \"device_uuid\": \"82d7329d-c750-4d97-9f03-c5771e599163\",\r\n        \"datetime\": \"{{current_time}}\",\r\n        \"di\": \"\",\r\n        \"ai\": [\r\n            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26\r\n        ]\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Catch/Signal",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Catch",
+										"Signal"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Catch/Signal test",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"postman.setNextRequest(\"catch signal\");  "
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let moment = require('moment');\r",
+											"pm.environment.set(\"current_time\", moment().toISOString());\r",
+											"pm.environment.set(\"current_time - 1 day\", moment().subtract(1, 'day').toISOString());\r",
+											"\r",
+											"pm.environment.set(\"random_number\", _.random(40, 40))"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "[\r\n    {\r\n        \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n        \"datetime\": \"2020-01-01T00:05:00+08:00\",\r\n        \"di\": \"\",\r\n        \"ai\": [\r\n            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26\r\n        ]\r\n    },\r\n    {\r\n        \"device_uuid\": \"82d7329d-c750-4d97-9f03-c5771e599163\",\r\n        \"datetime\": \"2020-01-01T00:05:00+08:00\",\r\n        \"di\": \"\",\r\n        \"ai\": [\r\n            1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26\r\n        ]\r\n    }\r\n]",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Catch/Signal",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Catch",
+										"Signal"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Device",
+					"item": [
+						{
+							"name": "Device",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Device",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Device"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "device/station (Remove",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Device/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Device",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Device",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-f769-4393-8839-35570439a70e\",\r\n    \"id\": \"test\",\r\n    \"name\": \"Test\",\r\n    \"is_enable\": false,\r\n    \"priority\": null,\r\n    \"lat\": null,\r\n    \"lon\": null,\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Device",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Device"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Device",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-f769-4393-8839-35570439a70e\",\r\n    \"id\": \"321\",\r\n    \"name\": \"321\",\r\n    \"is_enable\": false,\r\n    \"priority\": null,\r\n    \"lat\": null,\r\n    \"lon\": null,\r\n    \"description\": \"321\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Device",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Device"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Device",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Device/:uuid",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Device",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "00000000-f769-4393-8839-35570439a70e"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Last",
+					"item": [
+						{
+							"name": "Last (Remove",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Last",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Last"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Last/Station",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Last/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Last",
+										"Station"
+									],
+									"query": [
+										{
+											"key": "source",
+											"value": "device",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Last/Device",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Last/Device?source=sensor",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Last",
+										"Device"
+									],
+									"query": [
+										{
+											"key": "source",
+											"value": "sensor"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PhysicalQuantityPreset",
+					"item": [
+						{
+							"name": "PhysicalQuantityPreset",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantityPreset",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantityPreset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantityPreset",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-9699-4034-8cd5-5724ff1371c6\",\r\n    \"priority\": 99,\r\n    \"name\": \"test\",\r\n    \"full_name\": \"TEST\",\r\n    \"si_unit\": \"\",\r\n    \"status_code\": \"10\",\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"1,2,3,4,5\",\r\n    \"calibration_parameter\": \"1,2,3,4,5\",\r\n    \"description\": \"TEST\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantityPreset",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantityPreset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantityPreset",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-9699-4034-8cd5-5724ff1371c6\",\r\n    \"priority\": 999,\r\n    \"name\": \"test\",\r\n    \"full_name\": \"TEST2\",\r\n    \"si_unit\": \"\",\r\n    \"status_code\": \"10\",\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"1,2,3,4,5\",\r\n    \"calibration_parameter\": \"1,2,3,4,5\",\r\n    \"description\": \"TEST2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantityPreset",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantityPreset"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantityPreset",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"test\",\r\n    \"full_name\": \"測試值\",\r\n    \"si_unit\": \"none\",\r\n    \"device_uuid\": \"00000000-78b5-4ea2-88d8-573c2f6306e2\",\r\n    \"station_uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"status_code\": \"10\",\r\n    \"is_enable\": true,\r\n    \"priority\": 1,\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"2,4,6,8,10\",\r\n    \"calibration_parameter\": \"2,4,6,8,10\",\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantityPreset/:uuid",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantityPreset",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "00000000-9699-4034-8cd5-5724ff1371c6"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Status",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"8b41e317-e557-4c74-a5a2-882728f94384\",\r\n    \"status_code\": \"10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity/Status",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity",
+										"Status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PhysicalQuantity",
+					"item": [
+						{
+							"name": "PhysicalQuantity/:uuid",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity/:uuid",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "00000000-e8fc-4953-a9e9-ad735ad007d4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantity",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity?station_uuid=e2232881-e996-46be-a0a2-95a2983fdb42&device_uuid=dad9090f-b1f6-4cce-9007-29a44df54362",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity"
+									],
+									"query": [
+										{
+											"key": "station_uuid",
+											"value": "e2232881-e996-46be-a0a2-95a2983fdb42"
+										},
+										{
+											"key": "device_uuid",
+											"value": "dad9090f-b1f6-4cce-9007-29a44df54362"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantity",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"test\",\r\n    \"full_name\": \"測試值\",\r\n    \"si_unit\": \"none\",\r\n    \"device_uuid\": \"00000000-f769-4393-8839-35570439a70e\",\r\n    \"station_uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"status_code\": \"10\",\r\n    \"is_enable\": true,\r\n    \"priority\": 1,\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"2,4,6,8,10\",\r\n    \"calibration_parameter\": \"2,4,6,8,10\",\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantity",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"TEST\",\r\n    \"full_name\": \"TEST測試值\",\r\n    \"si_unit\": \"none\",\r\n    \"device_uuid\": \"00000000-f769-4393-8839-35570439a70e\",\r\n    \"station_uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"status_code\": \"30\",\r\n    \"is_enable\": true,\r\n    \"priority\": 1,\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"2,4,6,8,10\",\r\n    \"calibration_parameter\": \"2,4,6,8,10\",\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantity",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"name\": \"test\",\r\n    \"full_name\": \"測試值\",\r\n    \"si_unit\": \"none\",\r\n    \"device_uuid\": \"00000000-78b5-4ea2-88d8-573c2f6306e2\",\r\n    \"station_uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"status_code\": \"10\",\r\n    \"is_enable\": true,\r\n    \"priority\": 1,\r\n    \"physical_quantity_data_type\": \"Decimal1\",\r\n    \"aggregate_calculation_method\": \"avg\",\r\n    \"calibration_enable\": false,\r\n    \"calibration_value\": \"2,4,6,8,10\",\r\n    \"calibration_parameter\": \"2,4,6,8,10\",\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity/:uuid",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "00000000-e8fc-4953-a9e9-ad735ad007d4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Status",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\",\r\n    \"status_code\": \"10\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity/Status",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity",
+										"Status"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "record",
+					"item": [
+						{
+							"name": "record/last",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"physical_quantity_uuid\": \"02ac9935-8245-4911-a681-136d3a3c5400\",\r\n    \"time_zone\":\"+04:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Last",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Last"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n    \"start_time\": \"2024-05-08T05:00:00+04:00\",\r\n    \"end_time\": \"2024-05-08T07:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\",\r\n    \"source\": \"sensor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Device",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"82d7329d-c750-4d97-9f03-c5771e599163\",\r\n    \"start_time\": \"2024-09-10T00:00:00+08:00\",\r\n    \"end_time\": \"2024-09-20T15:00:00+08:00\",\r\n    \"time_zone\":\"+08:00\",\r\n    \"source\": \"sensor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Device",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Device"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Device/JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n    \"start_time\": \"2024-09-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-09-20T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\",\r\n    \"source\": \"sensor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Device/JSON",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Device",
+										"JSON"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Station",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-09-19T00:00:00+04:00\",\r\n    \"end_time\": \"2024-09-20T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\",\r\n    \"source\": \"debug\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Station/JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-09-19T00:00:00+04:00\",\r\n    \"end_time\": \"2024-09-20T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\",\r\n    \"source\": \"sensor\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Station/JSON",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Station",
+										"JSON"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Device/Sensor/JSON (Remove",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"dad9090f-b1f6-4cce-9007-29a44df54362\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Device/Sensor/JSON",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Device",
+										"Sensor",
+										"JSON"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Station/Sensor (Remove",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Station/Sensor",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Station",
+										"Sensor"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "record/Station/Sensor/JSON (Remove",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-05-10T00:00:00+04:00\",\r\n    \"end_time\": \"2024-05-10T15:00:00+04:00\",\r\n    \"time_zone\":\"+04:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Record/Station/Sensor/JSON",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Record",
+										"Station",
+										"Sensor",
+										"JSON"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "SignalInputMapping",
+					"item": [
+						{
+							"name": "SignalInputMapping/Detail",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/SignalInputMapping/Detail?device_uuid=f52132d2-8a8f-4acc-afbd-6ec556b12182",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"SignalInputMapping",
+										"Detail"
+									],
+									"query": [
+										{
+											"key": "device_uuid",
+											"value": "f52132d2-8a8f-4acc-afbd-6ec556b12182"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignalInputMapping",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"00000000-0000-0000-0000-153869be9584\",\r\n    \"type\": \"AI\",\r\n    \"pointer\": 0,\r\n    \"target_physical_quantity_uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/SignalInputMapping",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"SignalInputMapping"
+									],
+									"query": [
+										{
+											"key": "device_uuid",
+											"value": "39e091b7-78b5-4ea2-88d8-573c2f6306e2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignalInputMapping",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"old\": {\r\n        \"device_uuid\": \"00000000-0000-0000-0000-153869be9584\",\r\n        \"type\": \"AI\",\r\n        \"pointer\": 10,\r\n        \"target_physical_quantity_uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\"\r\n    },\r\n    \"new\": {\r\n        \"device_uuid\": \"00000000-0000-0000-0000-153869be9584\",\r\n        \"type\": \"AI\",\r\n        \"pointer\": 5,\r\n        \"target_physical_quantity_uuid\": \"00000000-e8fc-4953-a9e9-ad735ad007d4\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/SignalInputMapping",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"SignalInputMapping"
+									],
+									"query": [
+										{
+											"key": "device_uuid",
+											"value": "39e091b7-78b5-4ea2-88d8-573c2f6306e2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "SignalInputMapping",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"device_uuid\": \"39e091b7-78b5-4ea2-88d8-573c2f6306e2\",\r\n    \"type\": \"AI\",\r\n    \"pointer\": 0,\r\n    \"target_physical_quantity_uuid\": \"70575674-e8fc-4953-a9e9-ad735ad007d4\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/SignalInputMapping",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"SignalInputMapping"
+									],
+									"query": [
+										{
+											"key": "device_uuid",
+											"value": "39e091b7-78b5-4ea2-88d8-573c2f6306e2",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Station",
+					"item": [
+						{
+							"name": "Station",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Station",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"id\": \"test station\",\r\n    \"name\": \"Test Station\",\r\n    \"priority\": null,\r\n    \"address\": \"\",\r\n    \"is_enable\": true,\r\n    \"lat\": null,\r\n    \"lon\": null,\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Station",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"uuid\": \"00000000-701a-444b-ac40-d49fb976717d\",\r\n    \"id\": \"321\",\r\n    \"name\": \"321\",\r\n    \"priority\": null,\r\n    \"address\": \"test\",\r\n    \"is_enable\": false,\r\n    \"lat\": null,\r\n    \"lon\": null,\r\n    \"description\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Station",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/Station/:uuid",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"Station",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": "00000000-701a-444b-ac40-d49fb976717d"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TimeSeries",
+					"item": [
+						{
+							"name": "TimeSeries/Station",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"11465818-37f3-4c81-a093-296ea9dee685\",\r\n    \"start_time\": \"2024-09-19T12:00:00+08:00\",\r\n    \"end_time\": \"2024-09-19T17:00:00+08:00\",\r\n    \"interval\": \"1m\",\r\n    \"reverse\":false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/TimeSeries/Station",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"TimeSeries",
+										"Station"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "TimeSeries/Station/JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"station_uuid\": \"e2232881-e996-46be-a0a2-95a2983fdb42\",\r\n    \"start_time\": \"2024-05-09T00:00:00+08:00\",\r\n    \"end_time\": \"2024-05-09T17:00:00+08:00\",\r\n    \"interval\": \"5m\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/TimeSeries/Station/JSON",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"TimeSeries",
+										"Station",
+										"JSON"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "user/auth (Remove",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/User/Auth?Username=fenri",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"User",
+										"Auth"
+									],
+									"query": [
+										{
+											"key": "Username",
+											"value": "fenri"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/User/List",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"User",
+										"List"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User/Password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_uuid\":\"598dc3eb-8753-4259-be09-3deec26f8961\",\r\n    \"password\":\"@User12345678\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/v1/User/Password",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"User",
+										"Password"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsondata=pm.response.json()\r",
+									"\r",
+									"var token=jsondata.data\r",
+									"\r",
+									"pm.globals.set(\"token\",token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"fenri\",\r\n    \"password\":\"@Fenri16485970\",\r\n    \"captcha_id\":\"{{captcha_id}}\",\r\n    \"captcha\":\"434332\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/v1/Login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"Login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/Logout",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"Logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Captcha",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsondata=pm.response.json()\r",
+									"\r",
+									"var token=jsondata.data.captcha_id\r",
+									"\r",
+									"pm.environment.set(\"captcha_id\",token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/v1/Captcha",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"Captcha"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "https://iot.fenri.com.tw",
+			"type": "default",
+			"disabled": true
+		},
+		{
+			"key": "host",
+			"value": "192.168.100.201:82",
+			"type": "default",
+			"disabled": true
+		},
+		{
+			"key": "host",
+			"value": "127.0.0.1:18020",
+			"type": "default"
+		},
+		{
+			"key": "host",
+			"value": "118.163.66.142:38000",
+			"type": "default",
+			"disabled": true
+		},
+		{
+			"key": "host",
+			"value": "https://iot-demo.fenri.com.tw",
+			"type": "default",
+			"disabled": true
+		}
+	]
+}
