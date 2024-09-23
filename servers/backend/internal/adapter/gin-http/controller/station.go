@@ -21,7 +21,7 @@ func NewStationController(response response.IResponse, usecase *usecase.StationU
 }
 
 func (sc *StationController) GetList(c *gin.Context) {
-	stations, err := sc.station.List(domain.Station{})
+	stations, err := sc.station.List(domain.Station{IsEnable: true})
 	if err != nil {
 		sc.response.FailWithError(c, queryFail, err)
 		return
