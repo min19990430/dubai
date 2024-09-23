@@ -75,3 +75,4 @@
 {"level":"info","time":"2024-09-23T09:07:26.076+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"info","time":"2024-09-23T09:21:53.811+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
 {"level":"info","time":"2024-09-23T09:37:21.723+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-23T09:39:05.162+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}

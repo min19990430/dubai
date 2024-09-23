@@ -21,7 +21,7 @@ func NewDeviceController(response response.IResponse, deviceUsecase *usecase.Dev
 }
 
 func (dc *DeviceController) GetList(c *gin.Context) {
-	devices, err := dc.device.List(domain.Device{})
+	devices, err := dc.device.List(domain.Device{IsEnable: true})
 	if err != nil {
 		dc.response.FailWithError(c, queryFail, err)
 		return
