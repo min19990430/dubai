@@ -203,6 +203,7 @@ func (RecordRepository) dumpRowsToStringArray(physicalQuantities []domain.Physic
 	recordTable.Columns = append(recordTable.Columns, convert.TimeSeriesColumn{}.CreateTimeColumn())
 	for _, pq := range physicalQuantities {
 		recordTable.Columns = append(recordTable.Columns, convert.TimeSeriesColumn{}.FromPhysicalQuantity(pq))
+		recordTable.Columns = append(recordTable.Columns, convert.TimeSeriesColumn{}.CreatePhysicalQuantityStatus(pq))
 	}
 
 	readCols := make([]interface{}, len(cols))
