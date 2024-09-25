@@ -218,7 +218,7 @@ func (ru *RecordUsecase) List(start, end time.Time, deviceUUID string, timeZone 
 
 	var records []domain.Record
 	for _, stationUUID := range stationUUIDs {
-		tempRecords, listErr := ru.record.List(stationUUID, start, end)
+		tempRecords, listErr := ru.record.List(stationUUID, start, end, domain.Record{})
 		if listErr != nil {
 			return nil, listErr
 		}

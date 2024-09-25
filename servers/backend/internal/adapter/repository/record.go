@@ -58,9 +58,12 @@ func (r *RecordRepository) CreateMany(tableName string, records []domain.Record)
 	return nil
 }
 
-func (r *RecordRepository) List(tableName string, start, end time.Time) ([]domain.Record, error) {
+func (r *RecordRepository) List(tableName string, start, end time.Time, record domain.Record) ([]domain.Record, error) {
 	var recordsPO []model.Record
+	recordWherePo := model.Record{}.FromDomain(record)
+
 	if err := r.gorm.Table(tableName).
+		Where(recordWherePo).
 		Where("datetime BETWEEN ? AND ?", start, end).
 		Find(&recordsPO).Error; err != nil {
 		return nil, err
