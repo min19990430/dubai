@@ -36,6 +36,11 @@ func (tsc *TimeSeriesController) PostListByStation(c *gin.Context) {
 		return
 	}
 
+	if request.StartTime.After(request.EndTime) {
+		tsc.response.ValidatorFail(c, "The start time should not be greater than the end time")
+		return
+	}
+
 	aggregateData, err := tsc.timeSeries.AggregateDataByStation(request.StartTime, request.EndTime, request.StationUUID, request.Interval, request.Reverse)
 	if err != nil {
 		tsc.response.FailWithError(c, queryFail, err)
@@ -49,6 +54,11 @@ func (tsc *TimeSeriesController) PostListJSONByStation(c *gin.Context) {
 	var request TimeSeriesStationRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		tsc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	if request.StartTime.After(request.EndTime) {
+		tsc.response.ValidatorFail(c, "The start time should not be greater than the end time")
 		return
 	}
 

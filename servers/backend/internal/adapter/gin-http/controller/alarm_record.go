@@ -34,6 +34,11 @@ func (arc *AlarmRecordController) PostList(c *gin.Context) {
 		return
 	}
 
+	if request.StartTime.After(request.EndTime) {
+		arc.response.ValidatorFail(c, "The start time should not be greater than the end time")
+		return
+	}
+
 	result, err := arc.alarmRecord.List(request.StartTime, request.EndTime, domain.AlarmRecord{}, true)
 	if err != nil {
 		arc.response.FailWithError(c, queryFail, err)
@@ -53,6 +58,11 @@ func (arc *AlarmRecordController) PostListByDeviceUUID(c *gin.Context) {
 	var request AlarmRecordDeviceRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		arc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	if request.StartTime.After(request.EndTime) {
+		arc.response.ValidatorFail(c, "The start time should not be greater than the end time")
 		return
 	}
 
@@ -78,6 +88,11 @@ func (arc *AlarmRecordController) PostListByStationUUID(c *gin.Context) {
 		return
 	}
 
+	if request.StartTime.After(request.EndTime) {
+		arc.response.ValidatorFail(c, "The start time should not be greater than the end time")
+		return
+	}
+
 	result, err := arc.alarmRecord.ListByStationUUID(request.StartTime, request.EndTime, request.StationUUID, true)
 	if err != nil {
 		arc.response.FailWithError(c, queryFail, err)
@@ -96,6 +111,11 @@ func (arc *AlarmRecordController) PostListDetail(c *gin.Context) {
 	var request AlarmRecordDetailRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
 		arc.response.ValidatorFail(c, paramError)
+		return
+	}
+
+	if request.StartTime.After(request.EndTime) {
+		arc.response.ValidatorFail(c, "The start time should not be greater than the end time")
 		return
 	}
 

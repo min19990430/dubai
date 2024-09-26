@@ -122,17 +122,17 @@ func (s SemiCircularWaterFlowFormula) SettingFormula(params map[string]any) (str
 type RectangularWaterFlowFormula struct{}
 
 func (r RectangularWaterFlowFormula) SettingFormula(params map[string]any) (string, error) {
-	B, err := validateParam(params, "B")
+	B, err := r.validateParam(params, "B")
 	if err != nil {
 		return "", err
 	}
 
-	b, err := validateParam(params, "b")
+	b, err := r.validateParam(params, "b")
 	if err != nil {
 		return "", err
 	}
 
-	D, err := validateParam(params, "D")
+	D, err := r.validateParam(params, "D")
 	if err != nil {
 		return "", err
 	}
@@ -154,10 +154,14 @@ func (r RectangularWaterFlowFormula) SettingFormula(params map[string]any) (stri
 
 	N := int(floatN)
 
+	if err := r.paramsCheck(B, b, D); err != nil {
+		return "", err
+	}
+
 	return fmt.Sprintf("X>=0.03&&X<=0.45*%.2f^0.5?RectangularWaterFlow(%.2f, %.2f, %.2f, X)*60*%d:0.0", b, B, b, D, N), nil
 }
 
-func validateParam(params map[string]any, key string) (float64, error) {
+func (RectangularWaterFlowFormula) validateParam(params map[string]any, key string) (float64, error) {
 	if _, ok := params[key]; !ok {
 		return 0, fmt.Errorf("missing %s", key)
 	}
@@ -172,4 +176,18 @@ func validateParam(params map[string]any, key string) (float64, error) {
 	}
 
 	return value, nil
+}
+
+func (RectangularWaterFlowFormula) paramsCheck(channelWidth, notchWidth, channelDepth float64) error {
+	switch {
+	case !(channelWidth >= 0.5 && channelWidth <= 6.3):
+		return errors.New(" B must be between 0.5 and 6.3")
+	case !(notchWidth >= 0.15 && notchWidth <= 5):
+		return errors.New("b must be between 0.1 and 1.5")
+	case !(channelDepth >= 0.15 && channelDepth <= 3.5):
+		return errors.New(" D must be between 0.15 and 3.5")
+	case !((notchWidth*channelDepth)/(channelWidth*channelWidth) >= 0.06):
+		return errors.New("b*D/B^2 must be greater than 0.06")
+	}
+	return nil
 }
