@@ -81,6 +81,7 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 
 	for _, input := range inputs {
 		// 檢查UUID
+		// ! input 出現相同物理量時，即使更新 physicalQuantityCatchDetail，後續相同物理量依舊會取到 pqcdMap 裡的舊的資料
 		physicalQuantityCatchDetail, ok := pqcdMap[input.UUID]
 		if !ok {
 			return errors.New("uuid not found")
@@ -144,14 +145,14 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 		}
 
 		// 處理延伸物理量
-		if err := ciu.catchEvaluate(physicalQuantityCatchDetail.PhysicalQuantityEvaluates, input.Datetime, insertValue); err != nil {
+		if err := ciu.catchEvaluate(physicalQuantityCatchDetail.PhysicalQuantityEvaluates, physicalQuantityCatchDetail.PhysicalQuantity, input.Datetime, insertValue); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, inputTime time.Time, value float64) error {
+func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, targetPQ domain.PhysicalQuantity, inputTime time.Time, value float64) error {
 	if len(pqes) == 0 {
 		return nil
 	}
@@ -173,6 +174,11 @@ func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvalua
 		insertValue, err := ciu.physicalQuantityEvaluateUsecase.Evaluate(pqe, value)
 		if err != nil {
 			return err
+		}
+
+		// 如果啟用校正，則進行校正
+		if targetPQ.CalibrationEnable {
+			insertValue = linear.ComputeTwoPointLinearRegression(targetPQ.CalibrationValue, targetPQ.CalibrationParameter, insertValue)
 		}
 
 		pqe.Value = insertValue
