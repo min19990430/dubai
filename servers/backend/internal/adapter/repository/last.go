@@ -21,6 +21,7 @@ func NewLastRepository(gorm *gorm.DB) irepository.ILastRepository {
 func (l *LastRepository) GetStationLast(source string) ([]domain.StationLast, error) {
 	var lastPO []model.StationLast
 	err := l.gorm.
+		Where("is_enable = true").
 		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
 			return db.Where("is_enable = true").Where("source = ?", source).Order("physical_quantity.priority")
 		}).
@@ -47,6 +48,7 @@ func (l *LastRepository) GetStationLast(source string) ([]domain.StationLast, er
 func (l *LastRepository) GetDeviceLast(source string) ([]domain.DeviceLast, error) {
 	var lastPO []model.DeviceLast
 	err := l.gorm.
+		Where("is_enable = true").
 		Preload("PhysicalQuantities", func(db *gorm.DB) *gorm.DB {
 			return db.Where("is_enable = true").Where("source = ?", source).Order("physical_quantity.priority")
 		}).
