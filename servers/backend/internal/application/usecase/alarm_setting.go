@@ -27,7 +27,20 @@ func (asu *AlarmSettingUsecase) UpdateExpression(uuid, expression string) error 
 }
 
 func (asu *AlarmSettingUsecase) ListByDeviceUUID(uuid string) ([]domain.PQAlarmSettings, error) {
-	return asu.alarmSetting.ListByDeviceUUID(uuid)
+	pqAlarmSettings, err := asu.alarmSetting.ListByDeviceUUID(uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	var pqAlarmSettingsResult []domain.PQAlarmSettings
+	for _, pqAlarmSetting := range pqAlarmSettings {
+		if len(pqAlarmSetting.AlarmSettings) == 0 {
+			continue
+		}
+		pqAlarmSettingsResult = append(pqAlarmSettingsResult, pqAlarmSetting)
+	}
+
+	return pqAlarmSettingsResult, nil
 }
 
 func (asu *AlarmSettingUsecase) ListByStationUUID(stationUUID string) ([]domain.PQAlarmSettings, error) {
@@ -41,6 +54,9 @@ func (asu *AlarmSettingUsecase) ListByStationUUID(stationUUID string) ([]domain.
 		pqAlarmSetting, listErr := asu.alarmSetting.List(domain.AlarmSetting{PhysicalQuantityUUID: physicalQuantity.UUID})
 		if listErr != nil {
 			return nil, listErr
+		}
+		if len(pqAlarmSetting) == 0 {
+			continue
 		}
 		pqAlarmSettings = append(pqAlarmSettings,
 			domain.PQAlarmSettings{

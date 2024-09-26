@@ -138,3 +138,5 @@
 {"level":"error","time":"2024-09-26T14:38:44.064+0800","file":"controller/physical_quantity_evaluate.go:50","msg":"N is not an int","ApplicationName":"杜拜","message":"update fail"}
 {"level":"error","time":"2024-09-26T14:38:57.242+0800","file":"controller/physical_quantity_evaluate.go:50","msg":"N is not an int","ApplicationName":"杜拜","message":"update fail"}
 {"level":"info","time":"2024-09-26T14:47:50.928+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-26T14:54:22.547+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
+{"level":"info","time":"2024-09-26T14:58:20.570+0800","file":"web-backend/main.go:39","msg":"log 初始化成功","ApplicationName":"杜拜"}
