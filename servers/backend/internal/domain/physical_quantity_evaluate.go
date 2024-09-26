@@ -13,6 +13,7 @@ type PhysicalQuantityEvaluate struct {
 	IsEnable bool `json:"-"`
 	Priority int  `json:"priority"`
 
+	FormulaType                string `json:"formula_type"`
 	Formula                    string `json:"formula"`
 	PhysicalQuantityDataType   string `json:"physical_quantity_data_type"`
 	AggregateCalculationMethod string `json:"aggregate_calculation_method"`
@@ -22,4 +23,11 @@ type PhysicalQuantityEvaluate struct {
 	UpdateTime *time.Time `json:"update_time"`
 	Value      float64    `json:"value"`
 	Data       float64    `json:"data"`
+}
+
+type PhysicalQuantityEvaluateDetail struct {
+	PhysicalQuantityEvaluate
+
+	PhysicalQuantity       PhysicalQuantity `json:"physical_quantity"`
+	TargetPhysicalQuantity PhysicalQuantity `json:"target_physical_quantity"`
 }

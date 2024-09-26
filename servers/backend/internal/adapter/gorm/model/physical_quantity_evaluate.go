@@ -19,6 +19,7 @@ type PhysicalQuantityEvaluate struct {
 	IsEnable bool `gorm:"column:is_enable;not null;default:0;type:tinyint(4)" json:"-"`
 	Priority int  `gorm:"column:priority;default:0;type:int(11)" json:"priority"`
 
+	FormulaType                string `gorm:"column:formula_type;not null;default:'Normal';type:varchar(45)" json:"formula_type"`
 	Formula                    string `gorm:"column:formula;type:text" json:"formula"`
 	PhysicalQuantityDataType   string `gorm:"column:physical_quantity_data_type;default:'Decimal';type:varchar(45)" json:"physical_quantity_data_type"`
 	AggregateCalculationMethod string `gorm:"column:aggregate_calculation_method;default:'avg';type:varchar(45)" json:"aggregate_calculation_method"`
@@ -46,6 +47,7 @@ func (p PhysicalQuantityEvaluate) ToDomain() domain.PhysicalQuantityEvaluate {
 		SiUnit:                     p.SiUnit,
 		IsEnable:                   p.IsEnable,
 		Priority:                   p.Priority,
+		FormulaType:                p.FormulaType,
 		Formula:                    p.Formula,
 		PhysicalQuantityDataType:   p.PhysicalQuantityDataType,
 		AggregateCalculationMethod: p.AggregateCalculationMethod,
@@ -66,6 +68,7 @@ func (p PhysicalQuantityEvaluate) FromDomain(domain domain.PhysicalQuantityEvalu
 		SiUnit:                     domain.SiUnit,
 		IsEnable:                   domain.IsEnable,
 		Priority:                   domain.Priority,
+		FormulaType:                domain.FormulaType,
 		Formula:                    domain.Formula,
 		PhysicalQuantityDataType:   domain.PhysicalQuantityDataType,
 		AggregateCalculationMethod: domain.AggregateCalculationMethod,
@@ -73,5 +76,32 @@ func (p PhysicalQuantityEvaluate) FromDomain(domain domain.PhysicalQuantityEvalu
 		UpdateTime:                 domain.UpdateTime,
 		Value:                      domain.Value,
 		Data:                       domain.Data,
+	}
+}
+
+type PhysicalQuantityEvaluateDetail struct {
+	PhysicalQuantityEvaluate
+
+	PhysicalQuantity       PhysicalQuantity `gorm:"references:UUID;foreignKey:PhysicalQuantityUUID"`
+	TargetPhysicalQuantity PhysicalQuantity `gorm:"references:UUID;foreignKey:TargetPhysicalQuantityUUID"`
+}
+
+func (PhysicalQuantityEvaluateDetail) TableName() string {
+	return "physical_quantity_evaluate"
+}
+
+func (p PhysicalQuantityEvaluateDetail) ToDomain() domain.PhysicalQuantityEvaluateDetail {
+	return domain.PhysicalQuantityEvaluateDetail{
+		PhysicalQuantityEvaluate: p.PhysicalQuantityEvaluate.ToDomain(),
+		PhysicalQuantity:         p.PhysicalQuantity.ToDomain(),
+		TargetPhysicalQuantity:   p.TargetPhysicalQuantity.ToDomain(),
+	}
+}
+
+func (p PhysicalQuantityEvaluateDetail) FromDomain(domain domain.PhysicalQuantityEvaluateDetail) PhysicalQuantityEvaluateDetail {
+	return PhysicalQuantityEvaluateDetail{
+		PhysicalQuantityEvaluate: PhysicalQuantityEvaluate{}.FromDomain(domain.PhysicalQuantityEvaluate),
+		PhysicalQuantity:         PhysicalQuantity{}.FromDomain(domain.PhysicalQuantity),
+		TargetPhysicalQuantity:   PhysicalQuantity{}.FromDomain(domain.TargetPhysicalQuantity),
 	}
 }

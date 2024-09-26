@@ -74,47 +74,47 @@ var RectangularWaterFlowFunc = expr.Function(
 )
 
 // rectangularWaterFlow 矩形水流量計算
-// B: 渠道寬度(m)
-// b: 堰板缺口寬度(m)
-// D: 渠道底面到堰頂的垂直距離(m)
-// h: 水頭(m)
-func rectangularWaterFlow(B, b, D, h float64) (float64, error) {
-	if err := paramsCheck(B, b, D, h); err != nil {
+// B: channelWidth 渠道寬度(m)
+// b: notchWidth 堰板缺口寬度(m)
+// D: channelDepth 渠道底面到堰頂的垂直距離(m)
+// h: head 水頭(m)
+func rectangularWaterFlow(channelWidth, notchWidth, channelDepth, head float64) (float64, error) {
+	if err := paramsCheck(channelWidth, notchWidth, channelDepth, head); err != nil {
 		return 0, err
 	}
-	K := calculateK(h, D, B, b)
-	return calculateFlow(b, h, K), nil
+	K := calculateFlowCoeff(head, channelDepth, channelWidth, notchWidth)
+	return calculateFlow(notchWidth, head, K), nil
 }
 
-func paramsCheck(B, b, D, h float64) error {
+func paramsCheck(channelWidth, notchWidth, channelDepth, head float64) error {
 	switch {
-	case !(B >= 0.5 && B <= 6.3):
-		return errors.New("B must be between 0.5 and 6.3")
-	case !(b >= 0.15 && b <= 5):
+	case !(channelWidth >= 0.5 && channelWidth <= 6.3):
+		return errors.New(" B must be between 0.5 and 6.3")
+	case !(notchWidth >= 0.15 && notchWidth <= 5):
 		return errors.New("b must be between 0.1 and 1.5")
-	case !(D >= 0.15 && D <= 3.5):
-		return errors.New("D must be between 0.15 and 3.5")
-	case !((b*D)/(B*B) >= 0.06):
+	case !(channelDepth >= 0.15 && channelDepth <= 3.5):
+		return errors.New(" D must be between 0.15 and 3.5")
+	case !((notchWidth*channelDepth)/(channelWidth*channelWidth) >= 0.06):
 		return errors.New("b*D/B^2 must be greater than 0.06")
-	case !(h >= 0.03 && h <= 0.45*math.Sqrt(b)):
+	case !(head >= 0.03 && head <= 0.45*math.Sqrt(notchWidth)):
 		return errors.New("h must be between 0.03 and 0.45*sqrt(b)")
 	}
 	return nil
 }
 
-// calculateK 計算K值
-// h: 水頭(m)
-// D: 渠道底面到堰頂的垂直距離(m)
-// B: 渠道寬度(m)
-// b: 堰板缺口寬度(m)
-func calculateK(h, D, B, b float64) float64 {
-	return 107.1 + 0.177/h + 14.2*(h/D) - 25.7*math.Sqrt((B-b)*h/(D*B)) + 2.04*math.Sqrt(B/D)
+// calculateFlowCoeff 計算K值
+// h: head 水頭(m)
+// D: channelDepth 渠道底面到堰頂的垂直距離(m)
+// B: channelWidth 渠道寬度(m)
+// b: notchWidth 堰板缺口寬度(m)
+func calculateFlowCoeff(head, channelDepth, channelWidth, notchWidth float64) float64 {
+	return 107.1 + 0.177/head + 14.2*(head/channelDepth) - 25.7*math.Sqrt((channelWidth-notchWidth)*head/(channelDepth*channelWidth)) + 2.04*math.Sqrt(channelWidth/channelDepth)
 }
 
 // calculateFlow 計算流量
-// b: 堰板缺口寬度(m)
-// h: 水頭(m)
-// K: K值
-func calculateFlow(b, h float64, K float64) float64 {
-	return K * b * math.Pow(h, 1.5)
+// b: notchWidth 堰板缺口寬度(m)
+// h: head 水頭(m)
+// K: flowCoeff K值
+func calculateFlow(notchWidth, head float64, flowCoeff float64) float64 {
+	return flowCoeff * notchWidth * math.Pow(head, 1.5)
 }

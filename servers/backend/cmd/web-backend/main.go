@@ -56,6 +56,7 @@ func main() {
 	login := repository.NewLoginRepository(mysql)
 	physicalQuantity := repository.NewPhysicalQuantityRepository(mysql)
 	physicalQuantityEvaluate := repository.NewPhysicalQuantityEvaluateRepository(mysql)
+	physicalQuantityEvaluateDetail := repository.NewPhysicalQuantityEvaluateDetailRepository(mysql)
 	physicalQuantityPreset := repository.NewPhysicalQuantityPresetRepository(mysql)
 	physicalQuantityCatchDetail := repository.NewPhysicalQuantityCatchDetailRepository(mysql)
 	record := repository.NewRecordRepository(mysql)
@@ -88,6 +89,7 @@ func main() {
 	loginUsecase := usecase.NewLoginUsecase(login, *tokenUsecase)
 	physicalQuantityUsecase := usecase.NewPhysicalQuantityUsecase(physicalQuantity)
 	physicalQuantityPresetUsecase := usecase.NewPhysicalQuantityPresetUsecase(physicalQuantityPreset)
+	physicalQuantityEvaluateDetailUsecase := usecase.NewPhysicalQuantityEvaluateDetailUsecase(physicalQuantityEvaluateDetail)
 	recordUsecase := usecase.NewRecordUsecase(record, device, station, physicalQuantity)
 	signalInputMappingUsecase := usecase.NewSignalInputMappingUsecase(signalInputMapping)
 	signalInputMappingDetailUsecase := usecase.NewSignalInputMappingDetailUsecase(signalInputMappingDetail)
@@ -117,6 +119,7 @@ func main() {
 	lastController := controller.NewLastController(jsonResponse, lastUsecase, alarmRecordUsecase)
 	loginController := controller.NewLoginController(jsonResponse, loginUsecase)
 	physicalQuantityController := controller.NewPhysicalQuantityController(jsonResponse, physicalQuantityUsecase)
+	physicalQuantityEvaluateController := controller.NewPhysicalQuantityEvaluateController(jsonResponse, physicalQuantityEvaluateUsecase, physicalQuantityEvaluateDetailUsecase)
 	physicalQuantityPresetController := controller.NewPhysicalQuantityPresetController(jsonResponse, physicalQuantityPresetUsecase)
 	recordController := controller.NewRecordController(jsonResponse, recordUsecase)
 	signalInputMappingController := controller.NewSignalInputMappingController(jsonResponse, signalInputMappingUsecase)
@@ -146,6 +149,7 @@ func main() {
 	lastRouter := router.NewLastRouter(lastController)
 	loginRouter := router.NewLoginRouter(loginController, captchaMid, jwtMid)
 	physicalQuantityRouter := router.NewPhysicalQuantityRouter(physicalQuantityController, jwtMid)
+	physicalQuantityEvaluateRouter := router.NewPhysicalQuantityEvaluateRouter(physicalQuantityEvaluateController, jwtMid)
 	physicalQuantityPresetRouter := router.NewPhysicalQuantityPresetRouter(physicalQuantityPresetController, jwtMid)
 	recordRouter := router.NewRecordRouter(recordController, loggerMid)
 	signalInputMappingRouter := router.NewSignalInputMappingRouter(signalInputMappingController, jwtMid)
@@ -168,6 +172,7 @@ func main() {
 			lastRouter,
 			loginRouter,
 			physicalQuantityRouter,
+			physicalQuantityEvaluateRouter,
 			physicalQuantityPresetRouter,
 			recordRouter,
 			signalInputMappingRouter,

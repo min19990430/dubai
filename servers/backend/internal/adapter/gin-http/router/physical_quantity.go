@@ -8,14 +8,14 @@ import (
 )
 
 type PhysicalQuantityRouter struct {
-	physicalQuantityController controller.PhysicalQuantityController
+	physicalQuantityController *controller.PhysicalQuantityController
 
 	jwt jwt.JWT
 }
 
 func NewPhysicalQuantityRouter(physicalQuantityController *controller.PhysicalQuantityController, jwt *jwt.JWT) *PhysicalQuantityRouter {
 	return &PhysicalQuantityRouter{
-		physicalQuantityController: *physicalQuantityController,
+		physicalQuantityController: physicalQuantityController,
 		jwt:                        *jwt,
 	}
 }

@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"log"
-
 	"github.com/gin-gonic/gin"
 
 	"auto-monitoring/internal/adapter/gin-http/controller/response"
@@ -114,8 +112,6 @@ func (pqc *PhysicalQuantityController) PutUpdate(c *gin.Context) {
 	var request PhysicalQuantityRequest
 	err := c.ShouldBindJSON(&request)
 	if err != nil {
-		// FIXME: 刪除
-		log.Println(err)
 		pqc.response.ValidatorFail(c, paramError)
 		return
 	}
