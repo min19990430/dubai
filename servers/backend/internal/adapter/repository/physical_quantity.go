@@ -151,6 +151,21 @@ func NewPhysicalQuantityCatchDetailRepository(gorm *gorm.DB) irepository.IPhysic
 	return &PhysicalQuantityCatchDetailRepository{gorm: gorm}
 }
 
+func (pqcd *PhysicalQuantityCatchDetailRepository) FindOne(physicalQuantityCatchDetail domain.PhysicalQuantityCatchDetail) (domain.PhysicalQuantityCatchDetail, error) {
+	physicalQuantityCatchDetailWherePO := model.PhysicalQuantityCatchDetail{}.FromDomain(physicalQuantityCatchDetail)
+
+	var physicalQuantityCatchDetailPO model.PhysicalQuantityCatchDetail
+	err := pqcd.gorm.Preload(clause.Associations).
+		Where(physicalQuantityCatchDetailWherePO).
+		Order("priority").
+		First(&physicalQuantityCatchDetailPO).Error
+	if err != nil {
+		return domain.PhysicalQuantityCatchDetail{}, err
+	}
+
+	return physicalQuantityCatchDetailPO.ToDomain(), nil
+}
+
 func (pqcd *PhysicalQuantityCatchDetailRepository) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityCatchDetail, error) {
 	physicalQuantityWherePO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
 

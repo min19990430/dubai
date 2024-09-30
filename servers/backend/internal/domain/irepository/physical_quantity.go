@@ -3,6 +3,7 @@ package irepository
 import "auto-monitoring/internal/domain"
 
 type IPhysicalQuantityCatchDetailRepository interface {
+	FindOne(domain.PhysicalQuantityCatchDetail) (domain.PhysicalQuantityCatchDetail, error)
 	List(domain.PhysicalQuantity) ([]domain.PhysicalQuantityCatchDetail, error)
 }
 

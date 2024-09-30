@@ -152,14 +152,22 @@ func (ciu *CatchInputUsecase) catchInputWithDeviceUUID(deviceUUID string, inputs
 	return nil
 }
 
-func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, targetPQ domain.PhysicalQuantity, inputTime time.Time, value float64) error {
+func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvaluate, fromPQ domain.PhysicalQuantity, inputTime time.Time, value float64) error {
 	if len(pqes) == 0 {
 		return nil
 	}
 
 	for _, pqe := range pqes {
 		// 找到目標物理量
-		targetPQ, findErr := ciu.physicalQuantity.FindByUUID(pqe.TargetPhysicalQuantityUUID)
+		// targetPQ, findErr := ciu.physicalQuantity.FindByUUID(pqe.TargetPhysicalQuantityUUID)
+		targetPQ, findErr := ciu.physicalQuantityCatchDetail.FindOne(
+			domain.PhysicalQuantityCatchDetail{
+				PhysicalQuantityWithEvaluate: domain.PhysicalQuantityWithEvaluate{
+					PhysicalQuantity: domain.PhysicalQuantity{
+						UUID: pqe.TargetPhysicalQuantityUUID,
+					},
+				},
+			})
 		if findErr != nil {
 			return findErr
 		}
@@ -184,6 +192,14 @@ func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvalua
 		pqe.Value = insertValue
 		pqe.Data = value
 
+		// 告警動作
+		status, alarmErr := ciu.alarmUsecase.Check(targetPQ.AlarmSettings, inputTime, *pqe.UpdateTime, insertValue)
+		if alarmErr != nil {
+			return alarmErr
+		}
+
+		targetPQ.StatusCode = status
+
 		// 如果是新資料，則更新資料
 		if inputTime.After(*pqe.UpdateTime) {
 			*pqe.UpdateTime = inputTime
@@ -198,7 +214,7 @@ func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvalua
 			*targetPQ.UpdateTime = inputTime
 			targetPQ.Value = insertValue
 			targetPQ.Data = value
-			if updateErr := ciu.physicalQuantity.UpdateLast(targetPQ); updateErr != nil {
+			if updateErr := ciu.physicalQuantity.UpdateLast(targetPQ.PhysicalQuantity); updateErr != nil {
 				return updateErr
 			}
 		}
@@ -211,7 +227,7 @@ func (ciu *CatchInputUsecase) catchEvaluate(pqes []domain.PhysicalQuantityEvalua
 				Datetime:             inputTime,
 				Value:                pqe.Value,
 				Data:                 pqe.Data,
-				Status:               "10",
+				Status:               targetPQ.StatusCode,
 			}); createErr != nil {
 			return createErr
 		}
