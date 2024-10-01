@@ -795,7 +795,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/api/v1/Last/Station?source=device",
+									"raw": "{{host}}/api/v1/Last/Station?source=sensor",
 									"host": [
 										"{{host}}"
 									],
@@ -808,7 +808,7 @@
 									"query": [
 										{
 											"key": "source",
-											"value": "device",
+											"value": "sensor",
 											"description": "sensor,device,debug"
 										}
 									]
@@ -1006,6 +1006,18 @@
 										"api",
 										"v1",
 										"PhysicalQuantityEvaluate"
+									],
+									"query": [
+										{
+											"key": "station_uuid",
+											"value": "e2232881-e996-46be-a0a2-95a2983fdb42",
+											"disabled": true
+										},
+										{
+											"key": "device_uuid",
+											"value": "82d7329d-c750-4d97-9f03-c5771e599163",
+											"disabled": true
+										}
 									]
 								}
 							},
@@ -1087,7 +1099,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{host}}/api/v1/PhysicalQuantity?device_uuid=dad9090f-b1f6-4cce-9007-29a44df54362",
+									"raw": "{{host}}/api/v1/PhysicalQuantity",
 									"host": [
 										"{{host}}"
 									],
@@ -1104,7 +1116,8 @@
 										},
 										{
 											"key": "device_uuid",
-											"value": "dad9090f-b1f6-4cce-9007-29a44df54362"
+											"value": "dad9090f-b1f6-4cce-9007-29a44df54362",
+											"disabled": true
 										}
 									]
 								}
@@ -1256,6 +1269,38 @@
 										"v1",
 										"PhysicalQuantity",
 										"Status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PhysicalQuantity/Evaluate",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/v1/PhysicalQuantity/Evaluate",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"PhysicalQuantity",
+										"Evaluate"
+									],
+									"query": [
+										{
+											"key": "station_uuid",
+											"value": "e2232881-e996-46be-a0a2-95a2983fdb42",
+											"disabled": true
+										},
+										{
+											"key": "device_uuid",
+											"value": "dad9090f-b1f6-4cce-9007-29a44df54362",
+											"disabled": true
+										}
 									]
 								}
 							},
