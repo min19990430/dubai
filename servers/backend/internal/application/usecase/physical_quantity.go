@@ -40,3 +40,31 @@ func (pu *PhysicalQuantityUsecase) Update(physicalQuantity domain.PhysicalQuanti
 func (pu *PhysicalQuantityUsecase) Delete(key string) error {
 	return pu.physicalQuantityRepository.Delete(domain.PhysicalQuantity{UUID: key})
 }
+
+type PhysicalQuantityWithEvaluateUsecase struct {
+	physicalQuantityWithEvaluateRepository irepository.IPhysicalQuantityWithEvaluateRepository
+}
+
+func NewPhysicalQuantityWithEvaluateUsecase(
+	physicalQuantityWithEvaluateRepository irepository.IPhysicalQuantityWithEvaluateRepository,
+) *PhysicalQuantityWithEvaluateUsecase {
+	return &PhysicalQuantityWithEvaluateUsecase{
+		physicalQuantityWithEvaluateRepository: physicalQuantityWithEvaluateRepository,
+	}
+}
+
+func (pu *PhysicalQuantityWithEvaluateUsecase) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityWithEvaluate, error) {
+	physicalQuantitiesWithEvaluate, err := pu.physicalQuantityWithEvaluateRepository.List(physicalQuantity)
+	if err != nil {
+		return nil, err
+	}
+
+	var physicalQuantitiesWithEvaluateResult []domain.PhysicalQuantityWithEvaluate
+	for _, physicalQuantityWithEvaluate := range physicalQuantitiesWithEvaluate {
+		if len(physicalQuantityWithEvaluate.PhysicalQuantityEvaluates) == 0 {
+			continue
+		}
+		physicalQuantitiesWithEvaluateResult = append(physicalQuantitiesWithEvaluateResult, physicalQuantityWithEvaluate)
+	}
+	return physicalQuantitiesWithEvaluateResult, nil
+}

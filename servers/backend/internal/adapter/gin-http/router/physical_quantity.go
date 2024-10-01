@@ -29,6 +29,8 @@ func (pqr *PhysicalQuantityRouter) Setup(router *gin.RouterGroup) {
 		physicalQuantityGroup.PUT("", pqr.jwt.Middleware, pqr.physicalQuantityController.PutUpdate)
 		physicalQuantityGroup.DELETE("/:uuid", pqr.jwt.Middleware, pqr.physicalQuantityController.Delete)
 
+		physicalQuantityGroup.GET("/Evaluate", pqr.physicalQuantityController.GetListWithEvaluate)
+
 		physicalQuantityGroup.PATCH("/Status", pqr.physicalQuantityController.UpdateStatus)
 	}
 }

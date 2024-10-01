@@ -143,6 +143,34 @@ func (pq *PhysicalQuantityRepository) Delete(physicalQuantity domain.PhysicalQua
 	return pq.gorm.Delete(&physicalQuantityPO).Error
 }
 
+type PhysicalQuantityWithEvaluateRepository struct {
+	gorm *gorm.DB
+}
+
+func NewPhysicalQuantityWithEvaluateRepository(gorm *gorm.DB) irepository.IPhysicalQuantityWithEvaluateRepository {
+	return &PhysicalQuantityWithEvaluateRepository{gorm: gorm}
+}
+
+func (pqwe *PhysicalQuantityWithEvaluateRepository) List(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityWithEvaluate, error) {
+	physicalQuantityWherePO := model.PhysicalQuantity{}.FromDomain(physicalQuantity)
+
+	var physicalQuantityWithEvaluates []model.PhysicalQuantityWithEvaluate
+	err := pqwe.gorm.Preload(clause.Associations).
+		Where(physicalQuantityWherePO).
+		Order("priority").
+		Find(&physicalQuantityWithEvaluates).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var physicalQuantityWithEvaluatesDomain []domain.PhysicalQuantityWithEvaluate
+	for _, physicalQuantityWithEvaluate := range physicalQuantityWithEvaluates {
+		physicalQuantityWithEvaluatesDomain = append(physicalQuantityWithEvaluatesDomain, physicalQuantityWithEvaluate.ToDomain())
+	}
+
+	return physicalQuantityWithEvaluatesDomain, nil
+}
+
 type PhysicalQuantityCatchDetailRepository struct {
 	gorm *gorm.DB
 }
