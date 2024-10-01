@@ -48,15 +48,42 @@ func (pqu *PhysicalQuantityEvaluateUsecase) UpdateFormula(physicalQuantityEvalua
 }
 
 type PhysicalQuantityEvaluateDetailUsecase struct {
+	physicalQuantityRepository               irepository.IPhysicalQuantityRepository
 	physicalQuantityEvaluateDetailRepository irepository.IPhysicalQuantityEvaluateDetailRepository
 }
 
 func NewPhysicalQuantityEvaluateDetailUsecase(
+	physicalQuantityRepository irepository.IPhysicalQuantityRepository,
 	physicalQuantityEvaluateDetailRepository irepository.IPhysicalQuantityEvaluateDetailRepository,
 ) *PhysicalQuantityEvaluateDetailUsecase {
 	return &PhysicalQuantityEvaluateDetailUsecase{
+		physicalQuantityRepository:               physicalQuantityRepository,
 		physicalQuantityEvaluateDetailRepository: physicalQuantityEvaluateDetailRepository,
 	}
+}
+
+func (pqdu *PhysicalQuantityEvaluateDetailUsecase) ListByPhysicalQuantity(physicalQuantity domain.PhysicalQuantity) ([]domain.PhysicalQuantityEvaluateDetail, error) {
+	physicalQuantityList, err := pqdu.physicalQuantityRepository.List(physicalQuantity)
+	if err != nil {
+		return nil, err
+	}
+
+	var physicalQuantityEvaluateDetailList []domain.PhysicalQuantityEvaluateDetail
+	for _, physicalQuantity := range physicalQuantityList {
+		physicalQuantityEvaluateDetail, err := pqdu.physicalQuantityEvaluateDetailRepository.ListDetail(
+			domain.PhysicalQuantityEvaluate{
+				PhysicalQuantityUUID: physicalQuantity.UUID,
+			})
+		if err != nil {
+			return nil, err
+		}
+
+		if len(physicalQuantityEvaluateDetail) > 0 {
+			physicalQuantityEvaluateDetailList = append(physicalQuantityEvaluateDetailList, physicalQuantityEvaluateDetail...)
+		}
+	}
+
+	return physicalQuantityEvaluateDetailList, nil
 }
 
 func (pqdu *PhysicalQuantityEvaluateDetailUsecase) ListDetail(physicalQuantityEvaluate domain.PhysicalQuantityEvaluate) ([]domain.PhysicalQuantityEvaluateDetail, error) {

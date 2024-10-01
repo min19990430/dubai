@@ -91,7 +91,7 @@ func main() {
 	physicalQuantityUsecase := usecase.NewPhysicalQuantityUsecase(physicalQuantity)
 	physicalQuantityWithEvaluateUsecase := usecase.NewPhysicalQuantityWithEvaluateUsecase(physicalQuantityWithEvaluate)
 	physicalQuantityPresetUsecase := usecase.NewPhysicalQuantityPresetUsecase(physicalQuantityPreset)
-	physicalQuantityEvaluateDetailUsecase := usecase.NewPhysicalQuantityEvaluateDetailUsecase(physicalQuantityEvaluateDetail)
+	physicalQuantityEvaluateDetailUsecase := usecase.NewPhysicalQuantityEvaluateDetailUsecase(physicalQuantity, physicalQuantityEvaluateDetail)
 	recordUsecase := usecase.NewRecordUsecase(record, device, station, physicalQuantity)
 	signalInputMappingUsecase := usecase.NewSignalInputMappingUsecase(signalInputMapping)
 	signalInputMappingDetailUsecase := usecase.NewSignalInputMappingDetailUsecase(signalInputMappingDetail)

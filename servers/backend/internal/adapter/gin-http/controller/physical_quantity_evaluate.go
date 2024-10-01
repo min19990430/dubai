@@ -24,7 +24,14 @@ func NewPhysicalQuantityEvaluateController(response response.IResponse, usecase 
 }
 
 func (pqec *PhysicalQuantityEvaluateController) GetList(c *gin.Context) {
-	physicalQuantityEvaluateList, err := pqec.PhysicalQuantityEvaluateDetailUsecase.ListDetail(domain.PhysicalQuantityEvaluate{})
+	stationUUID := c.Query("station_uuid")
+	deviceUUID := c.Query("device_uuid")
+
+	physicalQuantityEvaluateList, err := pqec.PhysicalQuantityEvaluateDetailUsecase.ListByPhysicalQuantity(
+		domain.PhysicalQuantity{
+			StationUUID: stationUUID,
+			DeviceUUID:  deviceUUID,
+		})
 	if err != nil {
 		pqec.response.FailWithError(c, queryFail, err)
 		return
