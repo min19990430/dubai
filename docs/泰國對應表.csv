@@ -1,0 +1,15 @@
+device_uuid,device_id,type,pointer,uuid,name,full_name,si_unit,station_uuid,station_id,source
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,0,c92c167b-e878-496a-9860-b3f162a65f07,pH,pH,NULL,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,sensor
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,1,0f4770a1-55ab-4684-8aea-c4fc2b30c591,EC,EC,µS/cm,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,sensor
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,2,1c9c6b58-7e92-4814-bcd6-24a25484945d,temp,TEMP.,˚C,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,sensor
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,3,eddde94d-c257-4918-bbe9-9ef7d23c1ba0,battery_temp,BATTERY TEMP.,˚C,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,device
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,4,04c91cca-f18e-4251-95ff-c79579e00e74,battery,BATTERY CAPACITY,NULL,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,device
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,5,b5c354ac-4ce2-4c70-b6ae-3c15100b2f0d,water_level,Water Level,m,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,sensor
+5b03a9bb-1aa0-40ae-a898-b078c9eeaf6b,D02,AI,6,ee1f8688-e8ab-4fa8-bfac-11b046dc32af,water_velocity,Water Velocity,m/s,f6deaf9f-df7a-46fc-9266-18b3a34b1ace,S02,sensor
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,0,8e8d2c6d-4ef4-44a2-b343-b21ab9d1ab7a,pH,pH,NULL,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,sensor
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,1,799b6bff-afad-41bf-86ff-7f7b0c59a6df,EC,EC,µS/cm,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,sensor
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,2,026a9d18-ae14-4884-84b7-2d99bfb02b30,temp,TEMP.,˚C,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,sensor
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,3,a6e8979e-f8a5-4dca-8ba6-9dee34579957,battery_temp,BATTERY TEMP.,˚C,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,device
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,4,c4951db4-2370-4abf-af08-bb41a06cc37d,battery,BATTERY CAPACITY,NULL,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,device
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,5,5a398733-640c-4864-a2ea-d30a316b3e02,water_level,Water Level,m,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,sensor
+88b35fb4-b895-4400-be62-c6b983eaef95,D01,AI,6,5a398733-640c-4864-a2ea-d30a316b3e02,water_level,Water Level,m,23595ff2-2319-42e9-a67d-837c8d1a81a4,S01,sensor
