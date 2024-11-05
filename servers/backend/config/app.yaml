@@ -8,15 +8,15 @@ server:
 
 mysql:
   user: "root"
-  password: "@Fenri16485970"
+  password: "Aa22128588"
   #127.0.0.1:3306
   host: "127.0.0.1"
-  name: "international_iot_platform"
+  name: "dubai"
   debug: true
 
 redis:
   user: ""
-  password: "@Fenri16485970"
+  password: ""
   #127.0.0.1:3306
   host: "127.0.0.1:6379"
   database: 0
@@ -26,7 +26,7 @@ bigcache:
   life_window: "600s"
 
 log:
-  log_path: "C:\\Users\\user\\Documents\\AzureDevOps\\Dubai\\servers\\backend\\log\\log.txt"
+  log_path: "C:\\Users\\sam19\\OneDrive\\桌面\\dubai\\servers\\backend\\log\\log.txt" 
   application_name: "杜拜"
   debug: true
 
